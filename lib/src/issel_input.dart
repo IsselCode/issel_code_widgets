@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class IsselTextField extends StatefulWidget {
+class IsselInput extends StatefulWidget {
 
   String hintText;
   String label;
@@ -20,7 +20,7 @@ class IsselTextField extends StatefulWidget {
   Color iconUnfocusedColor;
 
 
-  IsselTextField({
+  IsselInput({
     super.key,
     this.autofocus = false,
     required this.hintText,
@@ -39,10 +39,10 @@ class IsselTextField extends StatefulWidget {
   });
 
   @override
-  State<IsselTextField> createState() => _InputApp2State();
+  State<IsselInput> createState() => _InputApp2State();
 }
 
-class _InputApp2State extends State<IsselTextField> {
+class _InputApp2State extends State<IsselInput> {
 
   late bool obscureText;
 
