@@ -9,7 +9,6 @@ class IsselInput extends StatefulWidget {
   TextEditingController controller;
   IconData? icon;
   bool obscureText;
-  bool white;
   bool autofocus;
   List<TextInputFormatter>? inputFormatters;
   TextInputType? keyboardType;
@@ -18,13 +17,15 @@ class IsselInput extends StatefulWidget {
   Color fillColor;
   Color focusBorderColor;
   Color iconUnfocusedColor;
+  double width;
+  double radius;
 
 
   IsselInput({
     super.key,
+    this.width = 350,
     this.autofocus = false,
     required this.hintText,
-    this.white = true,
     this.icon,
     required this.label,
     required this.controller,
@@ -35,7 +36,8 @@ class IsselInput extends StatefulWidget {
     required this.focusBorderColor,
     required this.iconUnfocusedColor,
     this.keyboardType,
-    this.onFieldSubmitted
+    this.onFieldSubmitted,
+    this.radius = 10,
   });
 
   @override
@@ -65,8 +67,8 @@ class _InputApp2State extends State<IsselInput> {
       keyboardType: widget.keyboardType,
       autofocus: widget.autofocus,
       decoration: InputDecoration(
-          constraints: const BoxConstraints(
-              maxWidth: 350
+          constraints: BoxConstraints(
+              maxWidth: widget.width
           ),
           alignLabelWithHint: false,
           label: Text(widget.label, style: Theme.of(context).textTheme.bodySmall,),
@@ -78,13 +80,13 @@ class _InputApp2State extends State<IsselInput> {
           fillColor: widget.fillColor,
           suffixIcon: widget.obscureText ? _iconButton() : null,
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(widget.radius),
               borderSide: BorderSide(
                   color: widget.focusBorderColor
               )
           ),
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(widget.radius),
               borderSide: BorderSide.none
           )
       ),
