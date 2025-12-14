@@ -1,77 +1,38 @@
 import 'package:flutter/material.dart';
-import 'issel_circular_progress_indicator.dart';
 
-class IsselButton extends StatefulWidget {
+class IsselButton extends StatelessWidget {
 
-  Future<void>? Function() onPressed;
-  Future<void>? Function()? onLongPress;
-  bool autofocus;
-  String text;
-  TextAlign? textAlign;
-  TextStyle? textStyle;
-  double width;
-  double height;
-  Color color;
+  final String text;
+  final double height;
+  final VoidCallback onTap;
+  final FocusNode? focusNode;
+  final Color? color;
+  final Color? textColor;
 
-  IsselButton({
-    required this.onPressed,
-    this.onLongPress,
+  const IsselButton({
+    super.key,
     required this.text,
-    this.autofocus = false,
-    this.textAlign,
-    this.textStyle,
-    this.height = 50,
-    this.width = 350,
-    required this.color,
-
+    required this.onTap,
+    this.color,
+    this.textColor,
+    this.focusNode,
+    this.height = 60
   });
 
   @override
-  State<IsselButton> createState() => _IsselButtonState();
-
-}
-
-class _IsselButtonState extends State<IsselButton> {
-
-  bool isLoading = false;
-
-  @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () async {
-        isLoading = true;
-        setState(() {});
-
-        await widget.onPressed();
-
-        isLoading = false;
-        setState(() {});
-      },
-      onLongPress: widget.onLongPress != null ? () async {
-        isLoading = true;
-        setState(() {});
-
-        await widget.onLongPress!();
-
-        isLoading = false;
-        setState(() {});
-      } : null,
-      style: ButtonStyle(
-        shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-        backgroundColor: WidgetStateProperty.all(widget.color),
-        padding: WidgetStateProperty.all(EdgeInsets.zero),
-        elevation: WidgetStateProperty.all(0),
-        fixedSize: WidgetStateProperty.all(Size(widget.width, widget.height))
+    ThemeData theme = Theme.of(context);
+    TextTheme textTheme = theme.textTheme;
+    ColorScheme colorScheme = theme.colorScheme;
+    return FilledButton(
+      focusNode: focusNode,
+      onPressed: onTap,
+      style: FilledButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        minimumSize: Size.fromHeight(height),
+        backgroundColor: color
       ),
-      autofocus: widget.autofocus,
-      child: isLoading
-        ? IsselCircularProgressIndicator()
-        : Text(
-          widget.text,
-          maxLines: 1,
-          textAlign: widget.textAlign,
-          style: widget.textStyle,
-        ),
+      child: Text(text, style: textTheme.bodyMedium?.copyWith(color: textColor ?? colorScheme.onPrimary, fontWeight: FontWeight.bold),)
     );
   }
 }

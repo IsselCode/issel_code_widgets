@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../custom_paints/cube_custom_paint.dart';
-import '../utils/issel_colors.dart';
+import '../custom_paints/gradient_border_painter.dart';
 
 class IsselCircularProgressIndicator extends StatefulWidget {
 
   double height;
   double width;
-  Color color;
+  Color? color;
 
   IsselCircularProgressIndicator({
     super.key,
-    this.color = IsselColors.deep,
+    this.color,
     this.height = 24,
     this.width = 24
   });
@@ -42,6 +41,8 @@ class _IsselCircularProgressIndicatorState extends State<IsselCircularProgressIn
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return SizedBox(
       width: 24,
       height: 24,
@@ -49,7 +50,7 @@ class _IsselCircularProgressIndicatorState extends State<IsselCircularProgressIn
         animation: _animation,
         builder: (context, child) {
           return CustomPaint(
-            painter: GradientBorderPainter(_animation, widget.color),
+            painter: GradientBorderPainter(_animation, colorScheme.primary),
           );
         },
       ),
