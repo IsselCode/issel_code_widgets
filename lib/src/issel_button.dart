@@ -4,7 +4,7 @@ class IsselButton extends StatelessWidget {
 
   final String text;
   final double height;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final FocusNode? focusNode;
   final Color? color;
   final Color? textColor;
@@ -12,7 +12,7 @@ class IsselButton extends StatelessWidget {
   const IsselButton({
     super.key,
     required this.text,
-    required this.onTap,
+    this.onTap,
     this.color,
     this.textColor,
     this.focusNode,
