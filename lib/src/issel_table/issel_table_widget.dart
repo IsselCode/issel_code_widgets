@@ -1,6 +1,6 @@
-import 'package:arquitectura_cliente_sistema_vision/src/clean_features/widgets/issel_table/issel_header_table.dart';
-import 'package:arquitectura_cliente_sistema_vision/src/clean_features/widgets/issel_table/issel_row_table.dart';
 import 'package:flutter/material.dart';
+import 'package:issel_code_widgets/src/issel_table/issel_header_table.dart';
+import 'package:issel_code_widgets/src/issel_table/issel_row_table.dart';
 
 class IsselTableWidget extends StatelessWidget {
 
