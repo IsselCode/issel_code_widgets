@@ -1,3 +1,7 @@
+export 'package:issel_code_widgets/src/issel_table/issel_header_table.dart';
+export 'package:issel_code_widgets/src/issel_table/issel_row_table.dart';
+export 'package:issel_code_widgets/src/issel_table/issel_table_widget.dart';
+export 'package:issel_code_widgets/src/issel_pill.dart';
 export 'package:issel_code_widgets/src/issel_action_box.dart';
 export 'package:issel_code_widgets/src/issel_asset_container.dart';
 export 'package:issel_code_widgets/src/issel_button.dart';
@@ -17,7 +21,6 @@ export 'package:issel_code_widgets/src/issel_text_form_field.dart';
 export 'package:issel_code_widgets/src/issel_toggle.dart';
 export 'package:issel_code_widgets/src/issel_toggle_field.dart';
 export 'package:issel_code_widgets/src/tab_switcher.dart';
-
 
 // CUSTOMS PAINTS
 export 'package:issel_code_widgets/custom_paints/gradient_border_painter.dart';
