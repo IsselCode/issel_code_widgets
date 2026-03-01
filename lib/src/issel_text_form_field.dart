@@ -74,10 +74,6 @@ class IsselTextFormField extends FormField<String> {
                       onSubmitted: s.widget.onSubmitted,
                       onTap: s.widget.onTap,
                       obscureText: s.widget.obscureText && s.showPassword,
-                      onChanged: (value) {
-                        s.widget.onChanged?.call(value);
-                        // NO llames didChange aquí, ya lo hace el listener del controller
-                      },
                       maxLines: 1,
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration.collapsed(
@@ -131,7 +127,8 @@ class _IsselTextFormFieldState extends FormFieldState<String> {
   TextEditingController? _internalController;
 
   TextEditingController get _controller =>
-      widget.controller ?? (_internalController ??= TextEditingController(text: value ?? ''));
+      widget.controller ??
+          (_internalController ??= TextEditingController(text: value ?? ''));
 
   @override
   IsselTextFormField get widget => super.widget as IsselTextFormField;
@@ -139,18 +136,20 @@ class _IsselTextFormFieldState extends FormFieldState<String> {
   @override
   void initState() {
     super.initState();
-
     _focusNode = widget.focusNode ?? FocusNode();
 
-    // un listener unicamente
+    // Listener único: de aquí actualizamos FormField + onChanged
     _controller.addListener(_handleControllerChanged);
   }
 
   void _handleControllerChanged() {
     if (!mounted) return;
     final text = _controller.text;
+
+    // Actualiza el FormField SIN tocar el controller (evita loops/IME issues)
     if (value != text) {
-      didChange(text);
+      setValue(text); // <-- en vez de didChange()
+      widget.onChanged?.call(text);
     }
   }
 
@@ -158,22 +157,32 @@ class _IsselTextFormFieldState extends FormFieldState<String> {
   void didUpdateWidget(IsselTextFormField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // si se cambia el controller externo, se mueve el listener
     if (oldWidget.controller != widget.controller) {
-      oldWidget.controller?.removeListener(_handleControllerChanged);
-      widget.controller?.addListener(_handleControllerChanged);
+      // quitar listener del anterior
+      (oldWidget.controller ?? _internalController)
+          ?.removeListener(_handleControllerChanged);
+
+      // poner listener al nuevo
+      _controller.addListener(_handleControllerChanged);
+
+      // opcional: si el nuevo controller viene vacío, sincroniza con el value actual
+      final current = value ?? '';
+      if (_controller.text != current && _controller.text.isEmpty) {
+        _controller.text = current;
+      }
     }
   }
 
   @override
-  void didChange(String? value) {
-    super.didChange(value);
+  void reset() {
+    super.reset();
+    // Si el form se resetea, aquí sí sincronizamos controller (programático, no por IME)
     final text = value ?? '';
     if (_controller.text != text) {
       _controller.value = _controller.value.copyWith(
         text: text,
         selection: TextSelection.collapsed(offset: text.length),
-        composing: TextRange.empty,
+        // NO borres composing aquí tampoco; pero en reset normalmente no importa.
       );
     }
   }
