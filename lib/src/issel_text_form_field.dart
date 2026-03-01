@@ -78,13 +78,15 @@ class IsselTextFormField extends FormField<String> {
                       onSubmitted: onSubmitted,
                       onTap: onTap,
                       readOnly: readOnly,
-                      controller: controller,
+                      controller: ctrl,
                       autofocus: autofocus,
                       focusNode: s._focusNode,
                       obscureText: obscureText && s.showPassword,
                       onChanged: onChanged != null ? (value) {
-                        onChanged(value);
-                        state.didChange(value);
+                        // callback del usuario
+                        s.widget.onChanged?.call(value);
+                        // mantiene el FormField sincronizado
+                        // state.didChange(value);
                       } : null, // integra con el Form
                       maxLines: 1,
                       textAlignVertical: TextAlignVertical.center,
@@ -137,18 +139,48 @@ class _IsselTextFormFieldState extends FormFieldState<String> {
   bool showPassword = true;
   late FocusNode _focusNode;
 
+  TextEditingController? _internalController;
+
+  TextEditingController get _controller =>
+      widget.controller ?? (_internalController ??= TextEditingController(text: value ?? ''));
+
   @override
   IsselTextFormField get widget => super.widget as IsselTextFormField;
 
   @override
   void initState() {
     super.initState();
-    // FocusNode: usar el externo o crear uno propio
-    if (widget.focusNode != null) {
-      _focusNode = widget.focusNode!;
-    } else {
-      _focusNode = FocusNode();
+
+    _focusNode = widget.focusNode ?? FocusNode();
+
+    // un listener unicamente
+    _controller.addListener(_handleControllerChanged);
+  }
+
+  void _handleControllerChanged() {
+    if (!mounted) return;
+    final text = _controller.text;
+    if (value != text) {
+      didChange(text);
     }
   }
 
+  @override
+  void didUpdateWidget(IsselTextFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // si se cambia el controller externo, se mueve el listener
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_handleControllerChanged);
+      widget.controller?.addListener(_handleControllerChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_handleControllerChanged);
+    _internalController?.dispose();
+    if (widget.focusNode == null) _focusNode.dispose();
+    super.dispose();
+  }
 }
