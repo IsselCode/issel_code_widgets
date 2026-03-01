@@ -6,7 +6,6 @@ class IsselRadioTile<T> extends StatelessWidget {
   final T value;
   final T? groupValue;
   final String label;
-  final String asset;
   final ValueChanged<T>? onChanged; // ← callback
   final double height;
   final Color? surfaceColor;
@@ -16,7 +15,6 @@ class IsselRadioTile<T> extends StatelessWidget {
     super.key,
     required this.value,
     required this.label,
-    required this.asset,
     required this.alignment,
     this.groupValue,
     this.onChanged,
