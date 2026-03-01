@@ -42,14 +42,7 @@ class IsselTextFormField extends FormField<String> {
       final colorScheme = theme.colorScheme;
 
       final s = state as _IsselTextFormFieldState;
-
-      final ctrl = controller ?? TextEditingController(text: state.value ?? '');
-      ctrl.addListener(() {
-        if (!state.mounted) return; // evita llamar didChange después de dispose
-        if (state.value != ctrl.text) {
-          state.didChange(ctrl.text);
-        }
-      });
+      final ctrl = s._controller; // controlador estable
 
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -58,62 +51,58 @@ class IsselTextFormField extends FormField<String> {
           GestureDetector(
             onTap: () {
               FocusScope.of(state.context).requestFocus(s._focusNode);
-              onTap?.call();
+              s.widget.onTap?.call();
             },
             child: Container(
-              height: height,
+              height: s.widget.height,
               decoration: BoxDecoration(
-                color: fillColor ?? colorScheme.surface,
+                color: s.widget.fillColor ?? colorScheme.surface,
                 borderRadius: BorderRadius.circular(10),
               ),
-              // Layout manual para evitar expansión del InputDecorator
               child: Row(
                 children: [
                   const SizedBox(width: 8),
-                  Icon(prefixIcon, color: colorScheme.outline),
+                  Icon(s.widget.prefixIcon, color: colorScheme.outline),
                   const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
-                      inputFormatters: inputFormatters,
-                      onSubmitted: onSubmitted,
-                      onTap: onTap,
-                      readOnly: readOnly,
                       controller: ctrl,
-                      autofocus: autofocus,
                       focusNode: s._focusNode,
-                      obscureText: obscureText && s.showPassword,
-                      onChanged: onChanged != null ? (value) {
-                        // callback del usuario
+                      autofocus: s.widget.autofocus,
+                      readOnly: s.widget.readOnly,
+                      inputFormatters: s.widget.inputFormatters,
+                      onSubmitted: s.widget.onSubmitted,
+                      onTap: s.widget.onTap,
+                      obscureText: s.widget.obscureText && s.showPassword,
+                      onChanged: (value) {
                         s.widget.onChanged?.call(value);
-                        // mantiene el FormField sincronizado
-                        // state.didChange(value);
-                      } : null, // integra con el Form
+                        // NO llames didChange aquí, ya lo hace el listener del controller
+                      },
                       maxLines: 1,
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration.collapsed(
-                        hintText: hintText,
+                        hintText: s.widget.hintText,
                         hintStyle: textTheme.bodyMedium?.copyWith(
                           color: colorScheme.outline,
                         ),
                       ),
                     ),
                   ),
-                  if (obscureText)
+                  if (s.widget.obscureText)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: IconButton(
-                        constraints: BoxConstraints(maxWidth: 48, maxHeight: 48),
-                        onPressed: () => state.setState(() {s.showPassword = !s.showPassword;}),
-                        icon: Icon(Icons.remove_red_eye_outlined, color: colorScheme.outline,),
+                        constraints: const BoxConstraints(maxWidth: 48, maxHeight: 48),
+                        onPressed: () => state.setState(() {
+                          s.showPassword = !s.showPassword;
+                        }),
+                        icon: Icon(Icons.remove_red_eye_outlined, color: colorScheme.outline),
                       ),
                     ),
-                  // const SizedBox(width: 8),
                 ],
               ),
             ),
           ),
-
-          // 👇 El error va DEBAJO del contenedor, no dentro del TextField
           if (state.hasError)
             Padding(
               padding: const EdgeInsets.only(top: 6, left: 12),
@@ -173,6 +162,19 @@ class _IsselTextFormFieldState extends FormFieldState<String> {
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller?.removeListener(_handleControllerChanged);
       widget.controller?.addListener(_handleControllerChanged);
+    }
+  }
+
+  @override
+  void didChange(String? value) {
+    super.didChange(value);
+    final text = value ?? '';
+    if (_controller.text != text) {
+      _controller.value = _controller.value.copyWith(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+        composing: TextRange.empty,
+      );
     }
   }
 
