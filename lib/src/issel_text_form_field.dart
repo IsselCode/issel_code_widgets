@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,7 +9,7 @@ class IsselTextFormField extends FormField<String> {
   final String hintText;
   final Color? fillColor;
   final bool obscureText;
-  final IconData prefixIcon;
+  final IconData? prefixIcon;
   final double height;
   final bool readOnly;
   final VoidCallback? onTap;
@@ -27,7 +28,7 @@ class IsselTextFormField extends FormField<String> {
     this.autofocus = false,
     this.focusNode,
     required this.hintText,
-    required this.prefixIcon,
+    this.prefixIcon,
     this.obscureText = false,
     this.fillColor,
     this.height = 60,
@@ -61,8 +62,10 @@ class IsselTextFormField extends FormField<String> {
               ),
               child: Row(
                 children: [
-                  const SizedBox(width: 8),
-                  Icon(s.widget.prefixIcon, color: colorScheme.outline),
+                  if (s.widget.prefixIcon != null)...[
+                    const SizedBox(width: 8),
+                    Icon(s.widget.prefixIcon, color: colorScheme.outline),
+                  ],
                   const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
@@ -75,7 +78,7 @@ class IsselTextFormField extends FormField<String> {
                       onTap: s.widget.onTap,
                       obscureText: s.widget.obscureText && s.showPassword,
                       maxLines: 1,
-                      textAlignVertical: TextAlignVertical.center,
+                      textAlignVertical: defaultTargetPlatform == TargetPlatform.windows ? null : TextAlignVertical.center,
                       decoration: InputDecoration.collapsed(
                         hintText: s.widget.hintText,
                         hintStyle: textTheme.bodyMedium?.copyWith(
