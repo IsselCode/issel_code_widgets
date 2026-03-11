@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class IsselCarousel extends StatefulWidget {
-
   const IsselCarousel({
     super.key,
     required this.height,
@@ -33,10 +32,10 @@ class IsselCarousel extends StatefulWidget {
   final Curve curve;
 
   @override
-  State<IsselCarousel> createState() => _IsselCarouselState();
+  State<IsselCarousel> createState() => _CustomCarouselState();
 }
 
-class _IsselCarouselState extends State<IsselCarousel> {
+class _CustomCarouselState extends State<IsselCarousel> {
   late final PageController _pageController;
 
   static const int _kVirtualCount = 1000000;
@@ -101,6 +100,26 @@ class _IsselCarouselState extends State<IsselCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.itemCount == 1) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return SizedBox(
+            height: widget.height,
+            child: Center(
+              child: SizedBox(
+                width: constraints.maxWidth * widget.viewportFraction,
+                child: AnimatedScale(
+                  duration: widget.scaleAnimationDuration,
+                  scale: widget.selectedScale,
+                  child: widget.itemBuilder(context, 0, true),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return NotificationListener<ScrollNotification>(
       onNotification: (n) {
         if (_isAnimating) return false;
