@@ -14,6 +14,8 @@ class IsselTextFormField extends FormField<String> {
   final bool readOnly;
   final VoidCallback? onTap;
   final void Function(String value)? onSubmitted;
+  final TextAlign? textAlign;
+  final TextStyle? style;
   final void Function(String value)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
 
@@ -23,6 +25,8 @@ class IsselTextFormField extends FormField<String> {
     this.onSubmitted,
     this.onChanged,
     this.onTap,
+    this.textAlign,
+    this.style,
     this.inputFormatters,
     this.readOnly = false,
     this.autofocus = false,
@@ -79,11 +83,11 @@ class IsselTextFormField extends FormField<String> {
                       obscureText: s.widget.obscureText && s.showPassword,
                       maxLines: 1,
                       textAlignVertical: defaultTargetPlatform == TargetPlatform.windows ? null : TextAlignVertical.center,
+                      textAlign: s.widget.textAlign ?? TextAlign.start,
+                      style: s.widget.style,
                       decoration: InputDecoration.collapsed(
                         hintText: s.widget.hintText,
-                        hintStyle: textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.outline,
-                        ),
+                        hintStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.outline,),
                       ),
                     ),
                   ),
