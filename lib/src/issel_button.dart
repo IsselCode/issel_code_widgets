@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class IsselButton extends StatelessWidget {
 
@@ -25,14 +26,15 @@ class IsselButton extends StatelessWidget {
     TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
     return FilledButton(
-      focusNode: focusNode,
-      onPressed: onTap,
-      style: FilledButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        minimumSize: Size.fromHeight(height),
-        backgroundColor: color
-      ),
-      child: Text(text, style: textTheme.bodyMedium?.copyWith(color: textColor ?? colorScheme.onPrimary, fontWeight: FontWeight.bold),)
+        focusNode: focusNode,
+        onPressed: onTap,
+        style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            minimumSize: Size.fromHeight(height),
+            backgroundColor: color,
+            enabledMouseCursor: onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic
+        ),
+        child: Text(text, style: textTheme.bodyMedium?.copyWith(color: textColor ?? colorScheme.onPrimary, fontWeight: FontWeight.bold),)
     );
   }
 }
