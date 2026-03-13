@@ -1,3 +1,4 @@
+export 'package:issel_code_widgets/src/issel_search_dropdown.dart';
 export 'package:issel_code_widgets/src/issel_table/issel_header_table.dart';
 export 'package:issel_code_widgets/src/issel_table/issel_row_table.dart';
 export 'package:issel_code_widgets/src/issel_table/issel_table_widget.dart';
