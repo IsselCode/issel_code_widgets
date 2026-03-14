@@ -35,7 +35,8 @@ class IsselRadioCard<T> extends StatelessWidget {
         maximumSize: Size(size, size),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         padding: EdgeInsets.all(10),
-        backgroundColor: value == groupValue ? colorScheme.primary : surfaceColor ?? colorScheme.surface
+        backgroundColor: value == groupValue ? colorScheme.primary : surfaceColor ?? colorScheme.surface,
+        enabledMouseCursor: onChanged != null ? SystemMouseCursors.click : SystemMouseCursors.basic
       ),
       child: Column(
         spacing: 10,
