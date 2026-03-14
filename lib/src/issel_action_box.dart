@@ -18,7 +18,7 @@ class IsselActionBox extends StatelessWidget {
     required this.height,
     required this.width,
     required this.onTap,
-    this.borderRadius = 20,
+    this.borderRadius = 10,
     this.onDeleteTap,
     this.color,
   });
@@ -29,52 +29,48 @@ class IsselActionBox extends StatelessWidget {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    return Material(
-      color: Colors.transparent,
+    return InkWell(
+      onTap: onTap,
       borderRadius: BorderRadius.circular(borderRadius),
-      clipBehavior: Clip.antiAlias,
-      child: InkResponse(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: Ink(
-          padding: EdgeInsets.all(height * 0.05),
-          height: height,
-          width: width,
-          decoration: BoxDecoration(
+      mouseCursor: SystemMouseCursors.click,
+      child: Ink(
+        padding: EdgeInsets.all(height * 0.05),
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
             color: color ?? colorScheme.surface,
             borderRadius: BorderRadius.circular(borderRadius)
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              if (onDeleteTap != null)
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            if (onDeleteTap != null)
               Positioned(
                 right: -10,
                 top: -10,
                 child: IconButton(
-                  onPressed: onDeleteTap,
-                  icon: Icon(Icons.delete, color: Colors.red,)
+                    onPressed: onDeleteTap,
+                    icon: Icon(Icons.delete, color: Colors.red,)
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 5,
-                children: [
-                  Image.asset(asset, height: height * 0.45, width: height * 0.45,),
-                  SizedBox(
-                      height: height * 0.20,
-                      child: Center(
-                          child: Text(
-                              title,
-                              style: textTheme.titleLarge?.copyWith(fontSize: height * 0.09),
-                              textAlign: TextAlign.center
-                          )
-                      )
-                  )
-                ],
-              )
-            ],
-          ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 5,
+              children: [
+                Image.asset(asset, height: height * 0.45, width: height * 0.45,),
+                SizedBox(
+                    height: height * 0.20,
+                    child: Center(
+                        child: Text(
+                            title,
+                            style: textTheme.titleLarge?.copyWith(fontSize: height * 0.09),
+                            textAlign: TextAlign.center
+                        )
+                    )
+                )
+              ],
+            )
+          ],
         ),
       ),
     );
