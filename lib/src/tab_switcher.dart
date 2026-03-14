@@ -62,6 +62,7 @@ class _IsselTabSwitcherState extends State<IsselTabSwitcher> with SingleTickerPr
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onTap: () => _toggleMovement(),
+        mouseCursor: SystemMouseCursors.click,
         child: Ink(
           height: widget.height,
           width: double.infinity,
