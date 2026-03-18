@@ -9,6 +9,7 @@ class IsselTabSwitcher extends StatefulWidget {
 
   final TabSwitcherAlignStates state;
   final double height;
+  final double width;
   final String leftText;
   final String rightText;
   final ValueChanged<TabSwitcherAlignStates> onChanged;
@@ -21,6 +22,7 @@ class IsselTabSwitcher extends StatefulWidget {
     required this.rightText,
     required this.onChanged,
     this.height = 50,
+    this.width = double.infinity,
     this.color,
   });
 
@@ -65,7 +67,7 @@ class _IsselTabSwitcherState extends State<IsselTabSwitcher> with SingleTickerPr
         mouseCursor: SystemMouseCursors.click,
         child: Ink(
           height: widget.height,
-          width: double.infinity,
+          width: widget.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color:  widget.color ?? colorScheme.surface,
