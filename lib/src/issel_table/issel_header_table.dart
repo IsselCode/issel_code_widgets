@@ -3,11 +3,13 @@
 import '../issel_pill.dart';
 
 class IsselHeaderTable extends StatelessWidget {
+  final Color? colorPills;
   final List<String> titleHeaders;
 
   const IsselHeaderTable({
     super.key,
     required this.titleHeaders,
+    this.colorPills,
   });
 
   @override
@@ -18,15 +20,15 @@ class IsselHeaderTable extends StatelessWidget {
     return Row(
       children: List.generate(
         titleHeaders.length,
-        (index) {
+            (index) {
           return Expanded(
             child: Row(
               children: [
                 if (index != 0) const SizedBox(width: 20),
                 Expanded(
                   child: IsselPill(
-                    text: titleHeaders[index],
-                    color: colorScheme.inverseSurface,
+                    widget: Text(titleHeaders[index], maxLines: 1,),
+                    color: colorPills ?? colorScheme.surface,
                   ),
                 ),
               ],

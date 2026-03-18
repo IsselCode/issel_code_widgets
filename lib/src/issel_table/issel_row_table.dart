@@ -1,5 +1,4 @@
 ﻿import 'package:flutter/material.dart';
-
 import '../issel_pill.dart';
 
 class IsselRowTable extends StatelessWidget {

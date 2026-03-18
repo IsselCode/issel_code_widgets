@@ -14,9 +14,9 @@ class IsselTableWidget extends StatelessWidget {
     required this.rows,
     this.color,
   }) : assert(
-          rows.every((row) => row.cells.length <= header.titleHeaders.length),
-          'IsselTableWidget: una fila tiene más celdas que las columnas de encabezado.',
-        );
+    rows.every((row) => row.cells.length <= header.titleHeaders.length),
+    'IsselTableWidget: una fila tiene más celdas que las columnas de encabezado.',
+  );
 
   @override
   Widget build(BuildContext context) {
