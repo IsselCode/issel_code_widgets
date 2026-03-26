@@ -39,6 +39,7 @@ class IsselTextFormField extends FormField<String> {
     FormFieldValidator<String>? validator,
     AutovalidateMode? autovalidateMode,
   }) : super(
+    initialValue: controller?.text ?? "",
     validator: validator,
     autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
     builder: (state) {
@@ -147,6 +148,11 @@ class _IsselTextFormFieldState extends FormFieldState<String> {
 
     // Listener único: de aquí actualizamos FormField + onChanged
     _controller.addListener(_handleControllerChanged);
+
+    final text = _controller.text;
+    if (value != text) {
+      setValue(text);
+    }
   }
 
   void _handleControllerChanged() {
