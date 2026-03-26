@@ -30,7 +30,9 @@ class IsselButton extends StatelessWidget {
         onPressed: onTap,
         style: FilledButton.styleFrom(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            minimumSize: Size.fromHeight(height),
+            fixedSize: Size.fromHeight(height),
+            visualDensity: VisualDensity.standard,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             backgroundColor: color,
             enabledMouseCursor: onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic
         ),
