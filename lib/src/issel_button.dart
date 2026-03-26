@@ -5,6 +5,7 @@ class IsselButton extends StatelessWidget {
 
   final String text;
   final double height;
+  final double width;
   final VoidCallback? onTap;
   final FocusNode? focusNode;
   final Color? color;
@@ -17,6 +18,7 @@ class IsselButton extends StatelessWidget {
     this.color,
     this.textColor,
     this.focusNode,
+    this.width = double.infinity,
     this.height = 60
   });
 
@@ -31,6 +33,8 @@ class IsselButton extends StatelessWidget {
         style: FilledButton.styleFrom(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             fixedSize: Size.fromHeight(height),
+            minimumSize: Size(width, height),
+            maximumSize: Size(width, height),
             visualDensity: VisualDensity.standard,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             backgroundColor: color,
