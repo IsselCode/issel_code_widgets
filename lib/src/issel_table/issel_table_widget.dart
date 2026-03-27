@@ -2,21 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:issel_code_widgets/src/issel_table/issel_header_table.dart';
 import 'package:issel_code_widgets/src/issel_table/issel_row_table.dart';
 
-class IsselTableWidget extends StatelessWidget {
+class IsselTableWidget extends StatefulWidget {
 
   final IsselHeaderTable header;
   final List<IsselRowTable> rows;
   final Color? color;
+  final bool showHoverRow;
 
   IsselTableWidget({
     super.key,
     required this.header,
     required this.rows,
     this.color,
+    this.showHoverRow = true,
   }) : assert(
-    rows.every((row) => row.cells.length <= header.titleHeaders.length),
-    'IsselTableWidget: una fila tiene más celdas que las columnas de encabezado.',
+  rows.every((row) => row.cells.length <= header.titleHeaders.length),
+  'IsselTableWidget: una fila tiene más celdas que las columnas de encabezado.',
   );
+
+  @override
+  State<IsselTableWidget> createState() => _IsselTableWidgetState();
+}
+
+class _IsselTableWidgetState extends State<IsselTableWidget> {
+
+  int? hoverIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +36,48 @@ class IsselTableWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: color ?? colorScheme.surface
+          borderRadius: BorderRadius.circular(10),
+          color: widget.color ?? colorScheme.surface
       ),
       child: Column(
         children: [
           //* Header
-          header,
+          widget.header,
           const SizedBox(height: 5,),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: List.generate(
-                  rows.length,
-                  (index) {
-                    return Column(
-                      children: [
-                        if (index != 0) const SizedBox(height: 5),
-                        rows[index]
-                      ],
-                    );
-                  },
+                  widget.rows.length, (index) {
+                  return Column(
+                    children: [
+                      if (index != 0) const SizedBox(height: 5),
+                      InkWell(
+                        onTap: widget.showHoverRow ? () {} : null,
+                        onHover: widget.showHoverRow ? (value) {
+                          value ? hoverIndex = index : hoverIndex = null;
+                          setState(() {});
+                        } : null,
+                        child: Stack(
+                          children: [
+                            widget.rows[index],
+                            if (hoverIndex == index)
+                              Positioned.fill(
+                                child: IgnorePointer(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: colorScheme.primary.withAlpha(15),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                },
                 ),
               ),
             ),
