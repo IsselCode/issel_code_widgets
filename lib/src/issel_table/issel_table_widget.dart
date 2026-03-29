@@ -57,7 +57,7 @@ class _IsselTableWidgetState extends State<IsselTableWidget> {
                     children: [
                       if (index != 0) const SizedBox(height: 5),
                       InkWell(
-                        onTap: widget.showHoverRow || widget.onTapRow != null ? widget.onTapRow.call(index) ?? () {} : null,
+                        onTap: widget.showHoverRow || widget.onTapRow != null ? widget.onTapRow?.call(index) ?? () {} : null,
                         onHover: widget.showHoverRow ? (value) {
                           value ? hoverIndex = index : hoverIndex = null;
                           setState(() {});
