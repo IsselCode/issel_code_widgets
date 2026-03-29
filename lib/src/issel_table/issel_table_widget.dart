@@ -8,11 +8,13 @@ class IsselTableWidget extends StatefulWidget {
   final List<IsselRowTable> rows;
   final Color? color;
   final bool showHoverRow;
+  final VoidCallback? onTapRow;
 
   IsselTableWidget({
     super.key,
     required this.header,
     required this.rows,
+    this.onTapRow,
     this.color,
     this.showHoverRow = true,
   }) : assert(
@@ -53,7 +55,7 @@ class _IsselTableWidgetState extends State<IsselTableWidget> {
                     children: [
                       if (index != 0) const SizedBox(height: 5),
                       InkWell(
-                        onTap: widget.showHoverRow ? () {} : null,
+                        onTap: widget.showHoverRow || widget.onTapRow != null ? widget.onTapRow ?? () {} : null,
                         onHover: widget.showHoverRow ? (value) {
                           value ? hoverIndex = index : hoverIndex = null;
                           setState(() {});
