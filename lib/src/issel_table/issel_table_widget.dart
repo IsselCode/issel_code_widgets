@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:issel_code_widgets/src/issel_table/issel_header_table.dart';
 import 'package:issel_code_widgets/src/issel_table/issel_row_table.dart';
@@ -8,7 +10,7 @@ class IsselTableWidget extends StatefulWidget {
   final List<IsselRowTable> rows;
   final Color? color;
   final bool showHoverRow;
-  final VoidCallback? onTapRow;
+  final Function(int index)? onTapRow;
 
   IsselTableWidget({
     super.key,
@@ -55,7 +57,7 @@ class _IsselTableWidgetState extends State<IsselTableWidget> {
                     children: [
                       if (index != 0) const SizedBox(height: 5),
                       InkWell(
-                        onTap: widget.showHoverRow || widget.onTapRow != null ? widget.onTapRow ?? () {} : null,
+                        onTap: widget.showHoverRow || widget.onTapRow != null ? widget.onTapRow.call(index) ?? () {} : null,
                         onHover: widget.showHoverRow ? (value) {
                           value ? hoverIndex = index : hoverIndex = null;
                           setState(() {});
