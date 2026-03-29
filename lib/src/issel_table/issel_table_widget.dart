@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
-
 import 'package:flutter/material.dart';
 import 'package:issel_code_widgets/src/issel_table/issel_header_table.dart';
 import 'package:issel_code_widgets/src/issel_table/issel_row_table.dart';
