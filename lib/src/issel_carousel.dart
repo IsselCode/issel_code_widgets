@@ -12,6 +12,8 @@ class IsselCarousel extends StatefulWidget {
     this.unselectedScale = 2 / 3,
     this.initialIndex = 0,
     this.onChanged,
+    this.onTap,
+    this.borderRadius,
     this.stepAnimationDuration = const Duration(milliseconds: 220),
     this.scaleAnimationDuration = const Duration(milliseconds: 250),
     this.curve = Curves.easeOut,
@@ -25,8 +27,10 @@ class IsselCarousel extends StatefulWidget {
   final double viewportFraction;
   final double selectedScale;
   final double unselectedScale;
+  final BorderRadius? borderRadius;
   final int initialIndex;
   final void Function(int index)? onChanged;
+  final void Function(int index)? onTap;
   final Duration stepAnimationDuration;
   final Duration scaleAnimationDuration;
   final Curve curve;
@@ -111,7 +115,17 @@ class _CustomCarouselState extends State<IsselCarousel> {
                 child: AnimatedScale(
                   duration: widget.scaleAnimationDuration,
                   scale: widget.selectedScale,
-                  child: widget.itemBuilder(context, 0, true),
+                  child: Material(
+                    borderRadius: widget.borderRadius,
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                      borderRadius: widget.borderRadius,
+                      onTap: () {
+                        widget.onTap?.call(0);
+                      },
+                      child: widget.itemBuilder(context, 0, true),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -169,7 +183,18 @@ class _CustomCarouselState extends State<IsselCarousel> {
               child: AnimatedScale(
                 duration: widget.scaleAnimationDuration,
                 scale: isSelected ? widget.selectedScale : widget.unselectedScale,
-                child: widget.itemBuilder(context, real, isSelected),
+                child: Material(
+                  borderRadius: widget.borderRadius,
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                      borderRadius: widget.borderRadius,
+                      onTap: () {
+                        final real = globalIndex % widget.itemCount;
+                        widget.onTap?.call(real);
+                      },
+                      child: widget.itemBuilder(context, real, isSelected)
+                  ),
+                ),
               ),
             );
           },
