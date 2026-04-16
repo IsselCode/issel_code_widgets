@@ -2,6 +2,10 @@
 
 Paquete Flutter con widgets reutilizables de IsselCode para construir interfaces con estilos consistentes, componentes de formulario, selectores, tarjetas, tablas y estados de carga.
 
+<p align="center">
+  <img src="docs/images/widgets.png" alt="Vista previa de widgets de issel_code_widgets" width="800">
+</p>
+
 `issel_code_widgets` está pensado como un kit práctico para freelancers, estudiantes y desarrolladores que quieren crear aplicaciones Flutter simples, bonitas y funcionales sin diseñar cada componente desde cero.
 
 La idea del paquete es reducir el tiempo dedicado a construir botones, campos, tarjetas, selectores y layouts comunes cuando el proyecto no necesita un sistema de diseño complejo, pero sí una interfaz clara, ordenada y fácil de entender.
