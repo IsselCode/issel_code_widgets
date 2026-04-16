@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+/// Carrusel horizontal infinito con elemento seleccionado escalado.
+///
+/// Construye cada elemento mediante [itemBuilder] y notifica cambios con
+/// [onChanged]. Al tocar un elemento, invoca [onTap] con el índice real.
 class IsselCarousel extends StatefulWidget {
+  /// Crea un carrusel con desplazamiento circular.
+  ///
+  /// [itemCount] debe ser mayor que cero.
   const IsselCarousel({
     super.key,
     required this.height,
@@ -19,20 +26,46 @@ class IsselCarousel extends StatefulWidget {
     this.curve = Curves.easeOut,
   }) : assert(itemCount > 0, 'itemCount debe ser > 0');
 
+  /// Constructor visual de cada elemento.
+  ///
+  /// Recibe el contexto, el índice real y si el elemento está seleccionado.
   final Widget Function(BuildContext context, int index, bool isSelected)
-  itemBuilder;
+      itemBuilder;
 
+  /// Cantidad de elementos reales del carrusel.
   final int itemCount;
+
+  /// Altura total del carrusel.
   final double height;
+
+  /// Fracción del viewport ocupada por cada página.
   final double viewportFraction;
+
+  /// Escala aplicada al elemento seleccionado.
   final double selectedScale;
+
+  /// Escala aplicada a los elementos no seleccionados.
   final double unselectedScale;
+
+  /// Radio aplicado al material y al efecto táctil de cada elemento.
   final BorderRadius? borderRadius;
+
+  /// Índice inicial seleccionado.
   final int initialIndex;
+
+  /// Callback invocado cuando cambia el índice seleccionado.
   final void Function(int index)? onChanged;
+
+  /// Callback invocado al tocar un elemento.
   final void Function(int index)? onTap;
+
+  /// Duración de la animación entre elementos.
   final Duration stepAnimationDuration;
+
+  /// Duración de la animación de escala.
   final Duration scaleAnimationDuration;
+
+  /// Curva usada por la animación entre elementos.
   final Curve curve;
 
   @override
@@ -93,7 +126,8 @@ class _CustomCarouselState extends State<IsselCarousel> {
   void _maybeRecentre(int globalIndex) {
     const int guard = 2000;
     if (globalIndex < guard || globalIndex > (_kVirtualCount - guard)) {
-      final newCenter = _virtualCenterAligned + (globalIndex % widget.itemCount);
+      final newCenter =
+          _virtualCenterAligned + (globalIndex % widget.itemCount);
       SchedulerBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           _pageController.jumpToPage(newCenter);
@@ -182,7 +216,8 @@ class _CustomCarouselState extends State<IsselCarousel> {
             return Center(
               child: AnimatedScale(
                 duration: widget.scaleAnimationDuration,
-                scale: isSelected ? widget.selectedScale : widget.unselectedScale,
+                scale:
+                    isSelected ? widget.selectedScale : widget.unselectedScale,
                 child: Material(
                   borderRadius: widget.borderRadius,
                   clipBehavior: Clip.antiAlias,
@@ -192,8 +227,7 @@ class _CustomCarouselState extends State<IsselCarousel> {
                         final real = globalIndex % widget.itemCount;
                         widget.onTap?.call(real);
                       },
-                      child: widget.itemBuilder(context, real, isSelected)
-                  ),
+                      child: widget.itemBuilder(context, real, isSelected)),
                 ),
               ),
             );

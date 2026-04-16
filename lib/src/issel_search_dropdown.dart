@@ -2,21 +2,41 @@ import 'package:flutter/material.dart';
 
 import '../issel_code_widgets.dart' show IsselTextFormField;
 
+/// Dropdown personalizado con campo de búsqueda integrado.
+///
+/// Muestra el elemento seleccionado como encabezado y despliega una lista de
+/// opciones junto con un campo para reportar búsquedas externas.
 class IsselSearchDropdown<T> extends StatefulWidget {
+  /// Valor seleccionado actualmente.
   final T? value;
+
+  /// Texto mostrado cuando no hay valor seleccionado.
   final String hintText;
+
+  /// Opciones disponibles en el dropdown.
   final List<DropdownMenuItem<T>>? items;
+
+  /// Callback invocado cuando cambia el valor seleccionado.
   final void Function(T?)? onChanged;
+
+  /// Altura del encabezado del dropdown.
   final double height;
+
+  /// Color de fondo opcional.
+  ///
+  /// Si es null, usa [ColorScheme.surface].
   final Color? color;
 
-  /// Callbacks del buscador
+  /// Callback invocado mientras cambia el texto de búsqueda.
   final ValueChanged<String>? onSearchChanged;
+
+  /// Callback invocado al enviar el texto de búsqueda.
   final ValueChanged<String>? onSearchSubmitted;
 
-  /// límite opcional de ítems visibles
+  /// Límite opcional de ítems visibles en la lista desplegada.
   final int? maxItemsToShow;
 
+  /// Crea un dropdown con búsqueda y opciones seleccionables.
   const IsselSearchDropdown({
     super.key,
     required this.items,
@@ -54,9 +74,8 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
     Widget? selectedChild;
     if (widget.value != null && widget.items != null) {
       try {
-        selectedChild = widget.items!
-            .firstWhere((e) => e.value == widget.value)
-            .child;
+        selectedChild =
+            widget.items!.firstWhere((e) => e.value == widget.value).child;
       } catch (_) {}
     }
 
@@ -86,7 +105,6 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
             mouseCursor: SystemMouseCursors.click,
             borderRadius: BorderRadius.circular(10),
             onTap: _toggleOpen,
-
             child: Row(
               children: [
                 Expanded(
@@ -172,16 +190,24 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
                         },
                         mouseCursor: SystemMouseCursors.click,
                         child: ClipRRect(
-                          borderRadius: index+1 == itemCount ? BorderRadius.vertical(bottom: Radius.circular(10)) : BorderRadius.zero,
+                          borderRadius: index + 1 == itemCount
+                              ? BorderRadius.vertical(
+                                  bottom: Radius.circular(10))
+                              : BorderRadius.zero,
                           child: ColoredBox(
-                            color: widget.value == item.value ? colorScheme.inverseSurface.withAlpha(25) : hoverValue == item.value ? colorScheme.inverseSurface.withAlpha(15) : Colors.transparent,
+                            color: widget.value == item.value
+                                ? colorScheme.inverseSurface.withAlpha(25)
+                                : hoverValue == item.value
+                                    ? colorScheme.inverseSurface.withAlpha(15)
+                                    : Colors.transparent,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 8,
                                 horizontal: 8,
                               ),
                               child: DefaultTextStyle(
-                                style: textTheme.bodyMedium ?? const TextStyle(fontSize: 14),
+                                style: textTheme.bodyMedium ??
+                                    const TextStyle(fontSize: 14),
                                 child: item.child,
                               ),
                             ),

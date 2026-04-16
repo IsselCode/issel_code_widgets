@@ -2,24 +2,29 @@ import 'package:flutter/material.dart';
 
 import '../custom_paints/gradient_border_painter.dart';
 
+/// Indicador de progreso circular animado con borde degradado.
 class IsselCircularProgressIndicator extends StatefulWidget {
-
+  /// Altura deseada del indicador.
   double height;
+
+  /// Ancho deseado del indicador.
   double width;
+
+  /// Color opcional del indicador.
   Color? color;
 
-  IsselCircularProgressIndicator({
-    super.key,
-    this.color,
-    this.height = 24,
-    this.width = 24
-  });
+  /// Crea un indicador circular animado.
+  IsselCircularProgressIndicator(
+      {super.key, this.color, this.height = 24, this.width = 24});
 
   @override
-  State<IsselCircularProgressIndicator> createState() => _IsselCircularProgressIndicatorState();
+  State<IsselCircularProgressIndicator> createState() =>
+      _IsselCircularProgressIndicatorState();
 }
 
-class _IsselCircularProgressIndicatorState extends State<IsselCircularProgressIndicator> with SingleTickerProviderStateMixin{
+class _IsselCircularProgressIndicatorState
+    extends State<IsselCircularProgressIndicator>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 

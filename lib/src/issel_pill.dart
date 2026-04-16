@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
 
+/// Contenedor tipo píldora para mostrar texto o un widget personalizado.
+///
+/// Debe recibir exactamente uno entre [text] y [widget].
 class IsselPill extends StatelessWidget {
-
+  /// Color de fondo opcional.
   final Color? color;
+
+  /// Color opcional del texto cuando se usa [text].
   final Color? textColor;
+
+  /// Altura opcional de la píldora.
   final double? height;
+
+  /// Padding interno de la píldora.
   final EdgeInsetsGeometry padding;
+
+  /// Alineación del contenido dentro de la píldora.
   final AlignmentGeometry? alignment;
+
+  /// Callback invocado al presionar la píldora.
   final VoidCallback? onTap;
+
   //* Text
+  /// Texto mostrado cuando no se proporciona [widget].
   final String? text;
+
   //* Widget
+  /// Widget personalizado mostrado cuando no se proporciona [text].
   final Widget? widget;
 
+  /// Crea una píldora con texto o contenido personalizado.
   IsselPill({
     super.key,
     this.text,
@@ -23,7 +41,10 @@ class IsselPill extends StatelessWidget {
     this.color,
     this.alignment = Alignment.center,
     this.padding = const EdgeInsets.symmetric(horizontal: 20),
-  }) : assert((text != null) ^ (widget != null), "Solo puedes colocar texto o widget", );
+  }) : assert(
+          (text != null) ^ (widget != null),
+          "Solo puedes colocar texto o widget",
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +65,13 @@ class IsselPill extends StatelessWidget {
           padding: padding,
           child: Align(
             alignment: alignment!,
-            child: widget ?? Text(
-              text!,
-              style: textTheme.bodyMedium?.copyWith(
-                color: textColor ?? colorScheme.onSurface,
-              ),
-            ),
+            child: widget ??
+                Text(
+                  text!,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: textColor ?? colorScheme.onSurface,
+                  ),
+                ),
           ),
         ),
       ),

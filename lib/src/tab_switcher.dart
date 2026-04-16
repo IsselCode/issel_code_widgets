@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
 
+/// Posiciones posibles del selector de pestañas.
 enum TabSwitcherAlignStates {
+  /// Selecciona el lado izquierdo.
   left,
+
+  /// Selecciona el lado derecho.
   right
 }
 
+/// Selector de dos estados con indicador animado.
 class IsselTabSwitcher extends StatefulWidget {
-
+  /// Estado seleccionado actualmente.
   final TabSwitcherAlignStates state;
+
+  /// Altura total del selector.
   final double height;
+
+  /// Ancho total del selector.
   final double width;
+
+  /// Texto de la opción izquierda.
   final String leftText;
+
+  /// Texto de la opción derecha.
   final String rightText;
+
+  /// Callback invocado cuando cambia el estado seleccionado.
   final ValueChanged<TabSwitcherAlignStates> onChanged;
+
+  /// Color de fondo opcional.
+  ///
+  /// Si es null, usa [ColorScheme.surface].
   final Color? color;
 
+  /// Crea un selector de dos pestañas.
   const IsselTabSwitcher({
     super.key,
     required this.state,
@@ -30,15 +50,14 @@ class IsselTabSwitcher extends StatefulWidget {
   State<IsselTabSwitcher> createState() => _IsselTabSwitcherState();
 }
 
-class _IsselTabSwitcherState extends State<IsselTabSwitcher> with SingleTickerProviderStateMixin {
-
+class _IsselTabSwitcherState extends State<IsselTabSwitcher>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
   }
 
   void _toggleMovement() {
-
     TabSwitcherAlignStates? newState;
 
     if (isLeftAlign()) {
@@ -70,24 +89,23 @@ class _IsselTabSwitcherState extends State<IsselTabSwitcher> with SingleTickerPr
           width: widget.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color:  widget.color ?? colorScheme.surface,
+            color: widget.color ?? colorScheme.surface,
           ),
           child: LayoutBuilder(
             builder: (context, constraints) {
               return Stack(
                 children: [
-
                   // Selected
                   AnimatedAlign(
                     duration: Duration(milliseconds: 250),
-                    alignment: isLeftAlign() ? Alignment.centerLeft : Alignment.centerRight,
+                    alignment: isLeftAlign()
+                        ? Alignment.centerLeft
+                        : Alignment.centerRight,
                     child: Container(
                       width: constraints.maxWidth / 2,
                       decoration: BoxDecoration(
-                        color: colorScheme.primary,
-                        borderRadius: BorderRadius.circular(10)
-                      ),
-
+                          color: colorScheme.primary,
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
 
@@ -95,34 +113,33 @@ class _IsselTabSwitcherState extends State<IsselTabSwitcher> with SingleTickerPr
                   Row(
                     children: [
                       Expanded(
-                        child: Center(
-                          child: Text(
-                            widget.leftText,
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: isLeftAlign() ? colorScheme.onPrimary : colorScheme.outline,
-                              fontWeight: isLeftAlign() ? FontWeight.bold : FontWeight.normal
-                            ),
-                          )
-                        )
-                      ),
+                          child: Center(
+                              child: Text(
+                        widget.leftText,
+                        style: textTheme.bodyMedium?.copyWith(
+                            color: isLeftAlign()
+                                ? colorScheme.onPrimary
+                                : colorScheme.outline,
+                            fontWeight: isLeftAlign()
+                                ? FontWeight.bold
+                                : FontWeight.normal),
+                      ))),
                       Expanded(
-                        child: Center(
-                          child: Text(
-                            widget.rightText,
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: isLeftAlign() ? colorScheme.outline : colorScheme.onPrimary,
-                              fontWeight: isLeftAlign() ? FontWeight.normal : FontWeight.bold,
-                            ),
-                          )
-                        )
-                      ),
+                          child: Center(
+                              child: Text(
+                        widget.rightText,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: isLeftAlign()
+                              ? colorScheme.outline
+                              : colorScheme.onPrimary,
+                          fontWeight: isLeftAlign()
+                              ? FontWeight.normal
+                              : FontWeight.bold,
+                        ),
+                      ))),
                     ],
                   ),
-
-
                 ],
-
-
               );
             },
           ),

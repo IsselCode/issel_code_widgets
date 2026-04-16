@@ -3,36 +3,56 @@ import 'package:flutter/material.dart';
 
 import 'issel_text_form_field.dart';
 
+/// Campo de texto que abre un editor flotante al tocarse.
+///
+/// Muestra un [IsselTextFormField] de solo lectura y sincroniza el texto del
+/// editor flotante con [controller] cuando el usuario confirma el valor.
 class IsselFloatTextField extends StatefulWidget {
+  /// Controlador que almacena el texto del campo.
   final TextEditingController controller;
+
+  /// Texto de ayuda mostrado cuando el campo está vacío.
   final String hintText;
+
+  /// Icono mostrado al inicio del campo.
   final IconData prefixIcon;
+
+  /// Indica si el texto debe ocultarse como contraseña.
   final bool obscureText;
+
+  /// Color de relleno opcional del campo.
   final Color? fillColor;
+
+  /// Altura del campo.
   final double height;
+
+  /// Validador opcional usado por el campo visible.
   final FormFieldValidator<String>? validator;
+
+  /// Callback invocado cuando cambia el texto.
   final void Function(String value)? onChanged;
+
+  /// Callback invocado cuando se envía el texto.
   final void Function(String value)? onSubmitted;
 
-  const IsselFloatTextField({
-    super.key,
-    required this.controller,
-    required this.hintText,
-    required this.prefixIcon,
-    this.obscureText = false,
-    this.fillColor,
-    this.height = 60,
-    this.validator,
-    this.onChanged,
-    this.onSubmitted
-  });
+  /// Crea un campo de texto con editor flotante.
+  const IsselFloatTextField(
+      {super.key,
+      required this.controller,
+      required this.hintText,
+      required this.prefixIcon,
+      this.obscureText = false,
+      this.fillColor,
+      this.height = 60,
+      this.validator,
+      this.onChanged,
+      this.onSubmitted});
 
   @override
   State<IsselFloatTextField> createState() => _IsselFloatTextFieldState();
 }
 
 class _IsselFloatTextFieldState extends State<IsselFloatTextField> {
-
   // 👇 Esta key nos permite acceder al FormFieldState
   // final GlobalKey<FormFieldState<String>> _fieldKey = GlobalKey<FormFieldState<String>>();
 
@@ -69,7 +89,8 @@ class _IsselFloatTextFieldState extends State<IsselFloatTextField> {
 
     if (result != null && result.accepted) {
       widget.controller.text = result.text;
-      widget.controller.selection = TextSelection.collapsed(offset: result.text.length);
+      widget.controller.selection =
+          TextSelection.collapsed(offset: result.text.length);
     }
   }
 
@@ -80,36 +101,34 @@ class _IsselFloatTextFieldState extends State<IsselFloatTextField> {
       flightShuttleBuilder: (ctx, anim, dir, fromCtx, toCtx) {
         return Material(
           type: MaterialType.transparency,
-          child: dir == HeroFlightDirection.push ? fromCtx.widget : toCtx.widget,
+          child:
+              dir == HeroFlightDirection.push ? fromCtx.widget : toCtx.widget,
         );
       },
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _openOverlay,
         child: ExcludeFocus(
-          child: IsselTextFormField(
-            // key: _fieldKey,              // 👈 usamos la key aquí
-            controller: widget.controller,
-            onTap: _openOverlay,
-            height: widget.height,
-            readOnly: true,
-            onChanged: widget.onChanged,
-            onSubmitted: widget.onSubmitted,
-            hintText: widget.hintText,
-            prefixIcon: widget.prefixIcon,
-            fillColor: widget.fillColor,
-            validator: widget.validator == null
-                ? null
-                : (_) => widget.validator!(widget.controller.text),
-            obscureText: widget.obscureText,
-          )
-        ),
+            child: IsselTextFormField(
+          // key: _fieldKey,              // 👈 usamos la key aquí
+          controller: widget.controller,
+          onTap: _openOverlay,
+          height: widget.height,
+          readOnly: true,
+          onChanged: widget.onChanged,
+          onSubmitted: widget.onSubmitted,
+          hintText: widget.hintText,
+          prefixIcon: widget.prefixIcon,
+          fillColor: widget.fillColor,
+          validator: widget.validator == null
+              ? null
+              : (_) => widget.validator!(widget.controller.text),
+          obscureText: widget.obscureText,
+        )),
       ),
     );
   }
 }
-
-
 
 class _FloatingEditorRoute extends StatefulWidget {
   final Object heroTag;
@@ -122,17 +141,16 @@ class _FloatingEditorRoute extends StatefulWidget {
   final void Function(String value)? onChanged;
   final void Function(String)? onSubmitted;
 
-  const _FloatingEditorRoute({
-    required this.heroTag,
-    required this.controllerText,
-    required this.hintText,
-    required this.prefixIcon,
-    required this.obscureText,
-    required this.fillColor,
-    required this.height,
-    required this.onChanged,
-    required this.onSubmitted
-  });
+  const _FloatingEditorRoute(
+      {required this.heroTag,
+      required this.controllerText,
+      required this.hintText,
+      required this.prefixIcon,
+      required this.obscureText,
+      required this.fillColor,
+      required this.height,
+      required this.onChanged,
+      required this.onSubmitted});
 
   @override
   State<_FloatingEditorRoute> createState() => _FloatingEditorRouteState();
@@ -140,7 +158,7 @@ class _FloatingEditorRoute extends StatefulWidget {
 
 class _FloatingEditorRouteState extends State<_FloatingEditorRoute> {
   late final TextEditingController _controller =
-  TextEditingController(text: widget.controllerText);
+      TextEditingController(text: widget.controllerText);
   late final FocusNode _focusNode = FocusNode();
   bool _focusedOnce = false;
 
@@ -207,7 +225,8 @@ class _FloatingEditorRouteState extends State<_FloatingEditorRoute> {
                   prefixIcon: widget.prefixIcon,
                   focusNode: _focusNode,
                   onSubmitted: (value) {
-                    Navigator.of(context).pop(_FloatResult.ok(_controller.text));
+                    Navigator.of(context)
+                        .pop(_FloatResult.ok(_controller.text));
                     widget.onSubmitted?.call(value);
                   },
                   obscureText: widget.obscureText,
@@ -221,7 +240,6 @@ class _FloatingEditorRouteState extends State<_FloatingEditorRoute> {
       ),
     );
   }
-
 }
 
 class _FloatResult {

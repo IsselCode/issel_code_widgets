@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Campo informativo con icono, texto y acción opcional de copiar.
 class IsselInfoField2 extends StatelessWidget {
-
+  /// Icono mostrado al inicio del campo.
   final IconData icon;
+
+  /// Texto mostrado y copiado al portapapeles cuando [copy] es true.
   final String label;
+
+  /// Altura total del campo.
   final double height;
+
+  /// Color de fondo opcional del campo.
   final Color? backColor;
+
+  /// Indica si debe mostrarse el botón para copiar [label].
   final bool copy;
+
+  /// Callback invocado después de copiar el texto.
   final VoidCallback? copied;
 
+  /// Crea un campo informativo con icono y texto.
   const IsselInfoField2({
     super.key,
     required this.icon,
@@ -31,9 +43,8 @@ class IsselInfoField2 extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(
-        color: backColor ?? colorScheme.surface,
-        borderRadius: BorderRadius.circular(10)
-      ),
+          color: backColor ?? colorScheme.surface,
+          borderRadius: BorderRadius.circular(10)),
       child: Row(
         spacing: 10,
         children: [
@@ -41,11 +52,10 @@ class IsselInfoField2 extends StatelessWidget {
           Icon(icon, color: colorScheme.outline),
           // Text
           Expanded(
-            child: Text(
-              label,
-              style: textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
-            )
-          ),
+              child: Text(
+            label,
+            style: textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
+          )),
           // Copy
           if (copy)
             Material(
@@ -66,10 +76,7 @@ class IsselInfoField2 extends StatelessWidget {
   }
 
   void copyToClipboard() {
-    Clipboard.setData(
-      ClipboardData(text: label)
-    );
+    Clipboard.setData(ClipboardData(text: label));
     copied?.call();
   }
-
 }

@@ -1,11 +1,16 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../issel_pill.dart';
 
+/// Fila de encabezados para [IsselTableWidget].
 class IsselHeaderTable extends StatelessWidget {
+  /// Color de fondo opcional de las píldoras del encabezado.
   final Color? colorPills;
+
+  /// Títulos mostrados como columnas del encabezado.
   final List<String> titleHeaders;
 
+  /// Crea una fila de encabezados de tabla.
   const IsselHeaderTable({
     super.key,
     required this.titleHeaders,
@@ -20,14 +25,17 @@ class IsselHeaderTable extends StatelessWidget {
     return Row(
       children: List.generate(
         titleHeaders.length,
-            (index) {
+        (index) {
           return Expanded(
             child: Row(
               children: [
                 if (index != 0) const SizedBox(width: 20),
                 Expanded(
                   child: IsselPill(
-                    widget: Text(titleHeaders[index], maxLines: 1,),
+                    widget: Text(
+                      titleHeaders[index],
+                      maxLines: 1,
+                    ),
                     color: colorPills ?? colorScheme.surface,
                   ),
                 ),
