@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -80,8 +79,13 @@ class IsselTextFormField extends FormField<String> {
             final theme = Theme.of(state.context);
             final textTheme = theme.textTheme;
             final colorScheme = theme.colorScheme;
-
             final s = state as _IsselTextFormFieldState;
+            final effectiveStyle =
+                (s.widget.style ?? textTheme.bodyMedium)?.copyWith(height: 1);
+            final effectiveHintStyle = textTheme.bodyMedium?.copyWith(
+              color: colorScheme.outline,
+              height: 1,
+            );
             final ctrl = s._controller; // controlador estable
 
             return Column(
@@ -117,18 +121,25 @@ class IsselTextFormField extends FormField<String> {
                             onTap: s.widget.onTap,
                             obscureText: s.widget.obscureText && s.showPassword,
                             maxLines: 1,
-                            textAlignVertical:
-                                defaultTargetPlatform == TargetPlatform.windows
-                                    ? null
-                                    : TextAlignVertical.center,
+                            textAlignVertical: TextAlignVertical.center,
                             textAlign: s.widget.textAlign ?? TextAlign.start,
-                            style: s.widget.style,
+                            style: effectiveStyle,
+                            strutStyle: effectiveStyle == null
+                                ? null
+                                : StrutStyle.fromTextStyle(
+                                    effectiveStyle,
+                                    height: 1,
+                                    forceStrutHeight: true,
+                                  ),
                             decoration: InputDecoration(
                               hintText: s.widget.hintText,
-                              hintStyle: textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.outline,
-                              ),
+                              hintStyle: effectiveHintStyle,
                               isCollapsed: true,
+                              isDense: true,
+                              filled: true,
+                              fillColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
                               contentPadding: EdgeInsets.zero,
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
