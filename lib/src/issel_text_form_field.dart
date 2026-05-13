@@ -123,11 +123,19 @@ class IsselTextFormField extends FormField<String> {
                                     : TextAlignVertical.center,
                             textAlign: s.widget.textAlign ?? TextAlign.start,
                             style: s.widget.style,
-                            decoration: InputDecoration.collapsed(
+                            decoration: InputDecoration(
                               hintText: s.widget.hintText,
                               hintStyle: textTheme.bodyMedium?.copyWith(
                                 color: colorScheme.outline,
                               ),
+                              isCollapsed: true,
+                              contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              focusedErrorBorder: InputBorder.none,
                             ),
                           ),
                         ),
