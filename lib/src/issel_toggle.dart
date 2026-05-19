@@ -12,7 +12,7 @@ class IsselToggle extends StatelessWidget {
   final double width;
 
   /// Callback invocado con el valor contrario al tocar el interruptor.
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
 
   /// Color de fondo opcional del riel.
   final Color? backColor;
@@ -38,7 +38,7 @@ class IsselToggle extends StatelessWidget {
     final double thumbSize = switchHeight - thumbMargin * 2;
 
     return InkWell(
-      onTap: () => onChanged(!value),
+      onTap: onChanged != null ? () => onChanged!(!value) : null,
       borderRadius: BorderRadius.circular(height * 0.5),
       child: Container(
         height: switchHeight,
