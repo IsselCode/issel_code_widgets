@@ -18,6 +18,9 @@ class IsselToggleField extends StatelessWidget {
   /// Color de fondo opcional del campo.
   final Color? backColor;
 
+  /// Color de fondo opcional del bloque del valor.
+  final Color? valueBackColor;
+
   /// Callback invocado cuando cambia el valor.
   final ValueChanged<bool> onChanged;
 
@@ -30,6 +33,7 @@ class IsselToggleField extends StatelessWidget {
     this.height = 50,
     this.width = 60,
     this.backColor,
+    this.valueBackColor,
   });
 
   @override
@@ -56,7 +60,7 @@ class IsselToggleField extends StatelessWidget {
             value: value,
             height: height,
             width: width,
-            backColor: backColor,
+            backColor: valueBackColor ?? theme.scaffoldBackgroundColor,
           )
         ],
       ),
