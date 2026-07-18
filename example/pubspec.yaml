@@ -1,0 +1,18 @@
+name: issel_code_widgets_example
+description: App de prueba web para visualizar los widgets de issel_code_widgets.
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.4.0-282.3.beta <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  issel_code_widgets:
+    path: ../
+
+dev_dependencies:
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
