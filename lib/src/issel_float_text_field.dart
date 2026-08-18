@@ -36,17 +36,18 @@ class IsselFloatTextField extends StatefulWidget {
   final void Function(String value)? onSubmitted;
 
   /// Crea un campo de texto con editor flotante.
-  const IsselFloatTextField(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      required this.prefixIcon,
-      this.obscureText = false,
-      this.fillColor,
-      this.height = 60,
-      this.validator,
-      this.onChanged,
-      this.onSubmitted});
+  const IsselFloatTextField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    required this.prefixIcon,
+    this.obscureText = false,
+    this.fillColor,
+    this.height = 60,
+    this.validator,
+    this.onChanged,
+    this.onSubmitted,
+  });
 
   @override
   State<IsselFloatTextField> createState() => _IsselFloatTextFieldState();
@@ -89,8 +90,9 @@ class _IsselFloatTextFieldState extends State<IsselFloatTextField> {
 
     if (result != null && result.accepted) {
       widget.controller.text = result.text;
-      widget.controller.selection =
-          TextSelection.collapsed(offset: result.text.length);
+      widget.controller.selection = TextSelection.collapsed(
+        offset: result.text.length,
+      );
     }
   }
 
@@ -101,30 +103,32 @@ class _IsselFloatTextFieldState extends State<IsselFloatTextField> {
       flightShuttleBuilder: (ctx, anim, dir, fromCtx, toCtx) {
         return Material(
           type: MaterialType.transparency,
-          child:
-              dir == HeroFlightDirection.push ? fromCtx.widget : toCtx.widget,
+          child: dir == HeroFlightDirection.push
+              ? fromCtx.widget
+              : toCtx.widget,
         );
       },
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _openOverlay,
         child: ExcludeFocus(
-            child: IsselTextFormField(
-          // key: _fieldKey,              // 👈 usamos la key aquí
-          controller: widget.controller,
-          onTap: _openOverlay,
-          height: widget.height,
-          readOnly: true,
-          onChanged: widget.onChanged,
-          onSubmitted: widget.onSubmitted,
-          hintText: widget.hintText,
-          prefixIcon: widget.prefixIcon,
-          fillColor: widget.fillColor,
-          validator: widget.validator == null
-              ? null
-              : (_) => widget.validator!(widget.controller.text),
-          obscureText: widget.obscureText,
-        )),
+          child: IsselTextFormField(
+            // key: _fieldKey,              // 👈 usamos la key aquí
+            controller: widget.controller,
+            onTap: _openOverlay,
+            height: widget.height,
+            readOnly: true,
+            onChanged: widget.onChanged,
+            onSubmitted: widget.onSubmitted,
+            hintText: widget.hintText,
+            prefixIcon: widget.prefixIcon,
+            fillColor: widget.fillColor,
+            validator: widget.validator == null
+                ? null
+                : (_) => widget.validator!(widget.controller.text),
+            obscureText: widget.obscureText,
+          ),
+        ),
       ),
     );
   }
@@ -141,24 +145,26 @@ class _FloatingEditorRoute extends StatefulWidget {
   final void Function(String value)? onChanged;
   final void Function(String)? onSubmitted;
 
-  const _FloatingEditorRoute(
-      {required this.heroTag,
-      required this.controllerText,
-      required this.hintText,
-      required this.prefixIcon,
-      required this.obscureText,
-      required this.fillColor,
-      required this.height,
-      required this.onChanged,
-      required this.onSubmitted});
+  const _FloatingEditorRoute({
+    required this.heroTag,
+    required this.controllerText,
+    required this.hintText,
+    required this.prefixIcon,
+    required this.obscureText,
+    required this.fillColor,
+    required this.height,
+    required this.onChanged,
+    required this.onSubmitted,
+  });
 
   @override
   State<_FloatingEditorRoute> createState() => _FloatingEditorRouteState();
 }
 
 class _FloatingEditorRouteState extends State<_FloatingEditorRoute> {
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.controllerText);
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.controllerText,
+  );
   late final FocusNode _focusNode = FocusNode();
   bool _focusedOnce = false;
 
@@ -196,6 +202,10 @@ class _FloatingEditorRouteState extends State<_FloatingEditorRoute> {
     return math.min(w - 32, 640);
   }
 
+  void _saveAndClose() {
+    Navigator.of(context).pop(_FloatResult.ok(_controller.text));
+  }
+
   @override
   Widget build(BuildContext context) {
     final avail = _availableRect(context);
@@ -204,38 +214,43 @@ class _FloatingEditorRouteState extends State<_FloatingEditorRoute> {
     final left = (avail.width - targetW) / 2;
     final top = avail.top + (avail.height - fieldHeight) / 2;
 
-    return GestureDetector(
-      onTap: () => Navigator.of(context).pop(_FloatResult.cancel()),
-      child: Material(
-        type: MaterialType.transparency,
-        child: Stack(
-          children: [
-            Positioned.fill(child: Container(color: Colors.transparent)),
-            Positioned(
-              top: top,
-              left: left,
-              width: targetW,
-              height: widget.height + 20,
-              child: Hero(
-                tag: widget.heroTag,
-                child: IsselTextFormField(
-                  controller: _controller,
-                  height: widget.height,
-                  hintText: widget.hintText,
-                  prefixIcon: widget.prefixIcon,
-                  focusNode: _focusNode,
-                  onSubmitted: (value) {
-                    Navigator.of(context)
-                        .pop(_FloatResult.ok(_controller.text));
-                    widget.onSubmitted?.call(value);
-                  },
-                  obscureText: widget.obscureText,
-                  readOnly: false,
-                  onChanged: widget.onChanged,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) _saveAndClose();
+      },
+      child: GestureDetector(
+        onTap: _saveAndClose,
+        child: Material(
+          type: MaterialType.transparency,
+          child: Stack(
+            children: [
+              Positioned.fill(child: Container(color: Colors.transparent)),
+              Positioned(
+                top: top,
+                left: left,
+                width: targetW,
+                height: widget.height + 20,
+                child: Hero(
+                  tag: widget.heroTag,
+                  child: IsselTextFormField(
+                    controller: _controller,
+                    height: widget.height,
+                    hintText: widget.hintText,
+                    prefixIcon: widget.prefixIcon,
+                    focusNode: _focusNode,
+                    onSubmitted: (value) {
+                      _saveAndClose();
+                      widget.onSubmitted?.call(value);
+                    },
+                    obscureText: widget.obscureText,
+                    readOnly: false,
+                    onChanged: widget.onChanged,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -247,5 +262,4 @@ class _FloatResult {
   final String text;
   _FloatResult(this.accepted, this.text);
   factory _FloatResult.ok(String text) => _FloatResult(true, text);
-  factory _FloatResult.cancel() => _FloatResult(false, '');
 }
