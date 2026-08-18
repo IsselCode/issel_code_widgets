@@ -103,9 +103,8 @@ class _IsselFloatTextFieldState extends State<IsselFloatTextField> {
       flightShuttleBuilder: (ctx, anim, dir, fromCtx, toCtx) {
         return Material(
           type: MaterialType.transparency,
-          child: dir == HeroFlightDirection.push
-              ? fromCtx.widget
-              : toCtx.widget,
+          child:
+              dir == HeroFlightDirection.push ? fromCtx.widget : toCtx.widget,
         );
       },
       child: GestureDetector(
@@ -161,12 +160,34 @@ class _FloatingEditorRoute extends StatefulWidget {
   State<_FloatingEditorRoute> createState() => _FloatingEditorRouteState();
 }
 
-class _FloatingEditorRouteState extends State<_FloatingEditorRoute> {
+class _FloatingEditorRouteState extends State<_FloatingEditorRoute>
+    with WidgetsBindingObserver {
   late final TextEditingController _controller = TextEditingController(
     text: widget.controllerText,
   );
   late final FocusNode _focusNode = FocusNode();
   bool _focusedOnce = false;
+  bool _keyboardWasVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() {
+    final keyboardIsVisible = WidgetsBinding
+            .instance.platformDispatcher.views.first.viewInsets.bottom >
+        0;
+
+    if (_keyboardWasVisible && !keyboardIsVisible && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _saveAndClose();
+      });
+    }
+    _keyboardWasVisible = keyboardIsVisible;
+  }
 
   @override
   void didChangeDependencies() {
@@ -183,6 +204,7 @@ class _FloatingEditorRouteState extends State<_FloatingEditorRoute> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _focusNode.dispose();
     _controller.dispose();
     super.dispose();
