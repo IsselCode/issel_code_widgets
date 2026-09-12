@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -80,11 +82,15 @@ class IsselTextFormField extends FormField<String> {
             final textTheme = theme.textTheme;
             final colorScheme = theme.colorScheme;
             final s = state as _IsselTextFormFieldState;
-            final effectiveStyle =
-                (s.widget.style ?? textTheme.bodyMedium)?.copyWith(height: 1);
+            final effectiveStyle = s.widget.style ?? textTheme.bodyMedium;
             final effectiveHintStyle = textTheme.bodyMedium?.copyWith(
               color: colorScheme.outline,
-              height: 1,
+            );
+            final fontSize = effectiveStyle?.fontSize ?? 14.0;
+            final lineHeight = fontSize * (effectiveStyle?.height ?? 1.2);
+            final verticalPadding = math.max(
+              0.0,
+              (s.widget.height - lineHeight) / 2,
             );
             final ctrl = s._controller; // controlador estable
 
@@ -111,42 +117,42 @@ class IsselTextFormField extends FormField<String> {
                         ],
                         const SizedBox(width: 8),
                         Expanded(
-                          child: TextField(
-                            controller: ctrl,
-                            focusNode: s._focusNode,
-                            autofocus: s.widget.autofocus,
-                            readOnly: s.widget.readOnly,
-                            inputFormatters: s.widget.inputFormatters,
-                            onSubmitted: s.widget.onSubmitted,
-                            onTap: s.widget.onTap,
-                            obscureText: s.widget.obscureText && s.showPassword,
-                            maxLines: 1,
-                            textAlignVertical: TextAlignVertical.center,
-                            textAlign: s.widget.textAlign ?? TextAlign.start,
-                            style: effectiveStyle,
-                            strutStyle: effectiveStyle == null
-                                ? null
-                                : StrutStyle.fromTextStyle(
-                                    effectiveStyle,
-                                    height: 1,
-                                    forceStrutHeight: true,
-                                  ),
-                            decoration: InputDecoration(
-                              hintText: s.widget.hintText,
-                              hintStyle: effectiveHintStyle,
-                              isCollapsed: true,
-                              isDense: true,
-                              filled: true,
-                              fillColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              contentPadding: EdgeInsets.zero,
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              focusedErrorBorder: InputBorder.none,
+                          child: SizedBox(
+                            height: s.widget.height,
+                            child: TextField(
+                              controller: ctrl,
+                              focusNode: s._focusNode,
+                              autofocus: s.widget.autofocus,
+                              readOnly: s.widget.readOnly,
+                              inputFormatters: s.widget.inputFormatters,
+                              onSubmitted: s.widget.onSubmitted,
+                              onTap: s.widget.onTap,
+                              obscureText:
+                                  s.widget.obscureText && s.showPassword,
+                              maxLines: 1,
+                              textAlignVertical: TextAlignVertical.center,
+                              textAlign: s.widget.textAlign ?? TextAlign.start,
+                              style: effectiveStyle,
+                              decoration: InputDecoration(
+                                hintText: s.widget.hintText,
+                                hintStyle: effectiveHintStyle,
+                                isCollapsed: false,
+                                isDense: true,
+                                visualDensity: VisualDensity.standard,
+                                filled: true,
+                                fillColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: verticalPadding,
+                                ),
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none,
+                              ),
                             ),
                           ),
                         ),
