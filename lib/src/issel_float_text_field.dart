@@ -35,6 +35,9 @@ class IsselFloatTextField extends StatefulWidget {
   /// Callback invocado cuando se envía el texto.
   final void Function(String value)? onSubmitted;
 
+  /// Tipo de teclado que se muestra al editar el campo.
+  final TextInputType? keyboardType;
+
   /// Crea un campo de texto con editor flotante.
   const IsselFloatTextField({
     super.key,
@@ -47,6 +50,7 @@ class IsselFloatTextField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.onSubmitted,
+    this.keyboardType,
   });
 
   @override
@@ -77,6 +81,7 @@ class _IsselFloatTextFieldState extends State<IsselFloatTextField> {
             height: widget.height,
             onChanged: widget.onChanged,
             onSubmitted: widget.onSubmitted,
+            keyboardType: widget.keyboardType,
           );
         },
         transitionsBuilder: (context, anim, _, child) {
@@ -143,6 +148,7 @@ class _FloatingEditorRoute extends StatefulWidget {
   final double height;
   final void Function(String value)? onChanged;
   final void Function(String)? onSubmitted;
+  final TextInputType? keyboardType;
 
   const _FloatingEditorRoute({
     required this.heroTag,
@@ -154,6 +160,7 @@ class _FloatingEditorRoute extends StatefulWidget {
     required this.height,
     required this.onChanged,
     required this.onSubmitted,
+    required this.keyboardType,
   });
 
   @override
@@ -268,6 +275,7 @@ class _FloatingEditorRouteState extends State<_FloatingEditorRoute>
                     obscureText: widget.obscureText,
                     readOnly: false,
                     onChanged: widget.onChanged,
+                    keyboardType: widget.keyboardType,
                   ),
                 ),
               ),

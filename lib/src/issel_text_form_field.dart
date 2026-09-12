@@ -53,6 +53,9 @@ class IsselTextFormField extends FormField<String> {
   /// Formateadores aplicados al texto ingresado.
   final List<TextInputFormatter>? inputFormatters;
 
+  /// Tipo de teclado que se muestra al editar el campo.
+  final TextInputType? keyboardType;
+
   /// Crea un campo de texto de formulario.
   IsselTextFormField({
     super.key,
@@ -63,6 +66,7 @@ class IsselTextFormField extends FormField<String> {
     this.textAlign,
     this.style,
     this.inputFormatters,
+    this.keyboardType,
     this.readOnly = false,
     this.autofocus = false,
     this.focusNode,
@@ -125,6 +129,7 @@ class IsselTextFormField extends FormField<String> {
                               autofocus: s.widget.autofocus,
                               readOnly: s.widget.readOnly,
                               inputFormatters: s.widget.inputFormatters,
+                              keyboardType: s.widget.keyboardType,
                               onSubmitted: s.widget.onSubmitted,
                               onTap: s.widget.onTap,
                               obscureText:
