@@ -32,6 +32,13 @@ class IsselTextFormField extends FormField<String> {
   /// Altura del campo.
   final double height;
 
+  /// Número mínimo de líneas visibles.
+  final int? minLines;
+
+  /// Número máximo de líneas visibles. Usa `null` para permitir líneas
+  /// ilimitadas.
+  final int? maxLines;
+
   /// Indica si el campo es de solo lectura.
   final bool readOnly;
 
@@ -56,6 +63,12 @@ class IsselTextFormField extends FormField<String> {
   /// Tipo de teclado que se muestra al editar el campo.
   final TextInputType? keyboardType;
 
+  /// Acción mostrada en el teclado.
+  final TextInputAction? textInputAction;
+
+  /// Alineación vertical del texto dentro del campo.
+  final TextAlignVertical? textAlignVertical;
+
   /// Crea un campo de texto de formulario.
   IsselTextFormField({
     super.key,
@@ -75,6 +88,10 @@ class IsselTextFormField extends FormField<String> {
     this.obscureText = false,
     this.fillColor,
     this.height = 60,
+    this.minLines,
+    this.maxLines = 1,
+    this.textInputAction,
+    this.textAlignVertical,
     FormFieldValidator<String>? validator,
     AutovalidateMode? autovalidateMode,
   }) : super(
@@ -97,6 +114,16 @@ class IsselTextFormField extends FormField<String> {
               (s.widget.height - lineHeight) / 2,
             );
             final ctrl = s._controller; // controlador estable
+            final isMultiline = s.widget.maxLines != 1;
+            final effectiveKeyboardType = s.widget.keyboardType ??
+                (isMultiline ? TextInputType.multiline : TextInputType.text);
+            final effectiveTextAlignVertical = s.widget.textAlignVertical ??
+                (isMultiline
+                    ? TextAlignVertical.top
+                    : TextAlignVertical.center);
+            final contentPadding = isMultiline
+                ? const EdgeInsets.fromLTRB(0, 12, 0, 12)
+                : EdgeInsets.symmetric(vertical: verticalPadding);
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -129,13 +156,15 @@ class IsselTextFormField extends FormField<String> {
                               autofocus: s.widget.autofocus,
                               readOnly: s.widget.readOnly,
                               inputFormatters: s.widget.inputFormatters,
-                              keyboardType: s.widget.keyboardType,
+                              keyboardType: effectiveKeyboardType,
+                              textInputAction: s.widget.textInputAction,
                               onSubmitted: s.widget.onSubmitted,
                               onTap: s.widget.onTap,
                               obscureText:
                                   s.widget.obscureText && s.showPassword,
-                              maxLines: 1,
-                              textAlignVertical: TextAlignVertical.center,
+                              minLines: s.widget.minLines,
+                              maxLines: s.widget.maxLines,
+                              textAlignVertical: effectiveTextAlignVertical,
                               textAlign: s.widget.textAlign ?? TextAlign.start,
                               style: effectiveStyle,
                               decoration: InputDecoration(
@@ -148,9 +177,7 @@ class IsselTextFormField extends FormField<String> {
                                 fillColor: Colors.transparent,
                                 focusColor: Colors.transparent,
                                 hoverColor: Colors.transparent,
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: verticalPadding,
-                                ),
+                                contentPadding: contentPadding,
                                 border: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,

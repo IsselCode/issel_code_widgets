@@ -1,6 +1,6 @@
 name: issel_code_widgets
 description: "Widgets Personalizados por IsselCode"
-version: 0.0.42
+version: 0.0.43
 homepage:
 
 environment:
@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   auto_size_text: ^3.0.0
+  file_picker: ^13.1.0
   flutter:
     sdk: flutter
   shimmer: ^3.0.0

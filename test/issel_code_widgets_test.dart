@@ -1,9 +1,89 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:issel_code_widgets/issel_code_widgets.dart';
 
 void main() {
+  testWidgets('IsselFilterBar changes the selected value', (tester) async {
+    String selected = 'all';
 
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: IsselFilterBar<String>(
+            value: selected,
+            options: const [
+              IsselFilterOption(value: 'all', label: 'Todos'),
+              IsselFilterOption(value: 'active', label: 'Activos'),
+            ],
+            onChanged: (value) => selected = value,
+          ),
+        ),
+      ),
+    );
 
+    expect(find.text('Todos'), findsOneWidget);
+    expect(find.text('Activos'), findsOneWidget);
 
+    await tester.tap(find.text('Activos'));
+
+    expect(selected, 'active');
+  });
+
+  testWidgets('IsselImagePicker invokes its callback', (tester) async {
+    var tapped = false;
+    final formKey = GlobalKey<FormState>();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Form(
+            key: formKey,
+            child: IsselImagePicker(
+              onTap: () => tapped = true,
+              pickImage: () async => null,
+              validator: (bytes) =>
+                  bytes == null ? 'Selecciona una imagen' : null,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Seleccionar imagen'), findsOneWidget);
+    expect(formKey.currentState!.validate(), isFalse);
+    await tester.pump();
+    expect(find.text('Selecciona una imagen'), findsOneWidget);
+    await tester.tap(find.text('Seleccionar imagen'));
+
+    expect(tapped, isTrue);
+  });
+
+  testWidgets('IsselImagePicker clears the selected image', (tester) async {
+    Uint8List? selected = base64Decode(
+      'R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: IsselImagePicker(
+            bytes: selected,
+            onChanged: (value) => selected = value,
+            pickImage: () async => null,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.close_outlined), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.close_outlined));
+    await tester.pump();
+
+    expect(selected, isNull);
+    expect(find.byIcon(Icons.close_outlined), findsNothing);
+  });
 }

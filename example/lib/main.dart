@@ -43,6 +43,7 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
   String? _status = 'Activo';
   String? _country = 'mx';
   String _plan = 'Pro';
+  String _filter = 'all';
   int _carouselIndex = 0;
   String _lastAction = 'Listo para probar widgets';
 
@@ -87,6 +88,41 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
                         ),
                   ),
                   const SizedBox(height: 24),
+                  _WidgetPreview(
+                    name: 'IsselFilterBar',
+                    child: IsselFilterBar<String>(
+                      value: _filter,
+                      options: const [
+                        IsselFilterOption(value: 'all', label: 'Todos'),
+                        IsselFilterOption(value: 'active', label: 'Activos'),
+                        IsselFilterOption(
+                          value: 'archived',
+                          label: 'Archivados',
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _filter = value;
+                          _lastAction = 'Filtro: $value';
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  _WidgetPreview(
+                    name: 'IsselImagePicker',
+                    child: IsselImagePicker(
+                      height: 180,
+                      fit: BoxFit.contain,
+                      showClearButton: true,
+                      onTap: () {
+                        setState(() {
+                          _lastAction = 'Selector de imagen presionado';
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   LayoutBuilder(
                     builder: (context, constraints) {
                       final isWide = constraints.maxWidth >= 880;
@@ -102,113 +138,137 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
                                 key: _formKey,
                                 child: Column(
                                   children: [
-                                    IsselTextFormField(
-                                      controller: _nameController,
-                                      hintText: 'Nombre',
-                                      prefixIcon: Icons.person_outline,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Campo requerido';
-                                        }
-                                        return null;
-                                      },
+                                    _WidgetPreview(
+                                      name: 'IsselTextFormField',
+                                      child: IsselTextFormField(
+                                        controller: _nameController,
+                                        hintText: 'Nombre',
+                                        prefixIcon: Icons.person_outline,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Campo requerido';
+                                          }
+                                          return null;
+                                        },
+                                      ),
                                     ),
                                     const SizedBox(height: 12),
-                                    IsselTextFormField(
-                                      controller: _notesController,
-                                      hintText: 'Notas internas',
-                                      prefixIcon: Icons.edit_note_outlined,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _lastAction = 'Notas: $value';
-                                        });
-                                      },
+                                    _WidgetPreview(
+                                      name: 'IsselTextFormField',
+                                      child: IsselTextFormField(
+                                        controller: _notesController,
+                                        hintText: 'Notas internas',
+                                        minLines: 3,
+                                        maxLines: 4,
+                                        height: 120,
+                                        textInputAction: TextInputAction.newline,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _lastAction = 'Notas: $value';
+                                          });
+                                        },
+                                      ),
                                     ),
                                     const SizedBox(height: 12),
-                                    IsselDropdown<String>(
-                                      value: _status,
-                                      hintText: 'Estado',
-                                      items: const [
-                                        DropdownMenuItem(
-                                          value: 'Activo',
-                                          child: Text('Activo'),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: 'Pausado',
-                                          child: Text('Pausado'),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: 'Archivado',
-                                          child: Text('Archivado'),
-                                        ),
-                                      ],
-                                      onChanged: (value) {
-                                        setState(() => _status = value);
-                                      },
+                                    _WidgetPreview(
+                                      name: 'IsselDropdown',
+                                      child: IsselDropdown<String>(
+                                        value: _status,
+                                        hintText: 'Estado',
+                                        items: const [
+                                          DropdownMenuItem(
+                                            value: 'Activo',
+                                            child: Text('Activo'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: 'Pausado',
+                                            child: Text('Pausado'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: 'Archivado',
+                                            child: Text('Archivado'),
+                                          ),
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() => _status = value);
+                                        },
+                                      ),
                                     ),
                                     const SizedBox(height: 12),
-                                    IsselSearchDropdown<String>(
-                                      value: _country,
-                                      hintText: 'Pais',
-                                      maxItemsToShow: 4,
-                                      items: const [
-                                        DropdownMenuItem(
-                                          value: 'mx',
-                                          child: Text('Mexico'),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: 'co',
-                                          child: Text('Colombia'),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: 'pe',
-                                          child: Text('Peru'),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: 'cl',
-                                          child: Text('Chile'),
-                                        ),
-                                      ],
-                                      onChanged: (value) {
-                                        setState(() => _country = value);
-                                      },
-                                      onSearchChanged: (value) {
-                                        setState(() {
-                                          _lastAction = 'Busqueda: $value';
-                                        });
-                                      },
+                                    _WidgetPreview(
+                                      name: 'IsselSearchDropdown',
+                                      child: IsselSearchDropdown<String>(
+                                        value: _country,
+                                        hintText: 'Pais',
+                                        maxItemsToShow: 4,
+                                        items: const [
+                                          DropdownMenuItem(
+                                            value: 'mx',
+                                            child: Text('Mexico'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: 'co',
+                                            child: Text('Colombia'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: 'pe',
+                                            child: Text('Peru'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: 'cl',
+                                            child: Text('Chile'),
+                                          ),
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() => _country = value);
+                                        },
+                                        onSearchChanged: (value) {
+                                          setState(() {
+                                            _lastAction = 'Busqueda: $value';
+                                          });
+                                        },
+                                      ),
                                     ),
                                     const SizedBox(height: 12),
-                                    IsselToggleField(
-                                      title: 'Cuenta activa',
-                                      value: _active,
-                                      onChanged: (value) {
-                                        setState(() => _active = value);
-                                      },
+                                    _WidgetPreview(
+                                      name: 'IsselToggleField',
+                                      child: IsselToggleField(
+                                        title: 'Cuenta activa',
+                                        value: _active,
+                                        onChanged: (value) {
+                                          setState(() => _active = value);
+                                        },
+                                      ),
                                     ),
                                     const SizedBox(height: 12),
-                                    IsselStepperField(
-                                      title: 'Cantidad',
-                                      minValue: 0,
-                                      maxValue: 10,
-                                      initValue: _quantity,
-                                      onChanged: (value) {
-                                        setState(() => _quantity = value);
-                                      },
+                                    _WidgetPreview(
+                                      name: 'IsselStepperField',
+                                      child: IsselStepperField(
+                                        title: 'Cantidad',
+                                        minValue: 0,
+                                        maxValue: 10,
+                                        initValue: _quantity,
+                                        onChanged: (value) {
+                                          setState(() => _quantity = value);
+                                        },
+                                      ),
                                     ),
                                     const SizedBox(height: 16),
-                                    IsselButton(
-                                      text: 'Validar formulario',
-                                      onTap: () {
-                                        final valid =
-                                            _formKey.currentState?.validate() ??
-                                                false;
-                                        setState(() {
-                                          _lastAction = valid
-                                              ? 'Formulario valido'
-                                              : 'Formulario incompleto';
-                                        });
-                                      },
+                                    _WidgetPreview(
+                                      name: 'IsselButton',
+                                      child: IsselButton(
+                                        text: 'Validar formulario',
+                                        onTap: () {
+                                          final valid = _formKey.currentState
+                                                  ?.validate() ??
+                                              false;
+                                          setState(() {
+                                            _lastAction = valid
+                                                ? 'Formulario valido'
+                                                : 'Formulario incompleto';
+                                          });
+                                        },
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -225,116 +285,143 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
                               title: 'Estados y seleccion',
                               child: Column(
                                 children: [
-                                  IsselHeaderActionTile(
-                                    title: 'Cliente Demo',
-                                    subTitle: 'Plan $_plan',
-                                    textButton: 'Accion',
-                                    onPressed: () {
-                                      setState(() {
-                                        _lastAction = 'Header presionado';
-                                      });
-                                    },
+                                  _WidgetPreview(
+                                    name: 'IsselHeaderActionTile',
+                                    child: IsselHeaderActionTile(
+                                      title: 'Cliente Demo',
+                                      subTitle: 'Plan $_plan',
+                                      textButton: 'Accion',
+                                      onPressed: () {
+                                        setState(() {
+                                          _lastAction = 'Header presionado';
+                                        });
+                                      },
+                                    ),
                                   ),
                                   const SizedBox(height: 12),
-                                  IsselInfoField(
-                                    title: 'Registros',
-                                    value: _quantity.toStringAsFixed(0),
+                                  _WidgetPreview(
+                                    name: 'IsselInfoField',
+                                    child: IsselInfoField(
+                                      title: 'Registros',
+                                      value: _quantity.toStringAsFixed(0),
+                                    ),
                                   ),
                                   const SizedBox(height: 12),
-                                  IsselInfoField2(
-                                    icon: Icons.link_outlined,
-                                    label: 'https://isselcode.dev/demo',
-                                    copy: true,
-                                    copied: () {
-                                      setState(() {
-                                        _lastAction = 'URL copiada';
-                                      });
-                                    },
+                                  _WidgetPreview(
+                                    name: 'IsselInfoField2',
+                                    child: IsselInfoField2(
+                                      icon: Icons.link_outlined,
+                                      label: 'https://isselcode.dev/demo',
+                                      copy: true,
+                                      copied: () {
+                                        setState(() {
+                                          _lastAction = 'URL copiada';
+                                        });
+                                      },
+                                    ),
                                   ),
                                   const SizedBox(height: 16),
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: IsselRadioTile<String>(
-                                          value: 'Basico',
-                                          groupValue: _plan,
-                                          label: 'Basico',
-                                          alignment: Alignment.center,
-                                          height: 64,
-                                          onChanged: (value) {
-                                            setState(() => _plan = value);
-                                          },
+                                        child: _WidgetPreview(
+                                          name: 'IsselRadioTile',
+                                          child: IsselRadioTile<String>(
+                                            value: 'Basico',
+                                            groupValue: _plan,
+                                            label: 'Basico',
+                                            alignment: Alignment.center,
+                                            height: 64,
+                                            onChanged: (value) {
+                                              setState(() => _plan = value);
+                                            },
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(width: 12),
                                       Expanded(
-                                        child: IsselRadioTile<String>(
-                                          value: 'Pro',
-                                          groupValue: _plan,
-                                          label: 'Pro',
-                                          alignment: Alignment.center,
-                                          height: 64,
-                                          onChanged: (value) {
-                                            setState(() => _plan = value);
-                                          },
+                                        child: _WidgetPreview(
+                                          name: 'IsselRadioTile',
+                                          child: IsselRadioTile<String>(
+                                            value: 'Pro',
+                                            groupValue: _plan,
+                                            label: 'Pro',
+                                            alignment: Alignment.center,
+                                            height: 64,
+                                            onChanged: (value) {
+                                              setState(() => _plan = value);
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 16),
-                                  Wrap(
-                                    spacing: 10,
-                                    runSpacing: 10,
-                                    children: [
-                                      IsselPill(
-                                          text:
-                                              _active ? 'Activo' : 'Inactivo'),
-                                      IsselPill(text: _status ?? 'Sin estado'),
-                                      IsselPill(text: 'Plan $_plan'),
-                                      IsselPill(
-                                        widget:
-                                            IsselCircularProgressIndicator(),
-                                      ),
-                                    ],
+                                  _WidgetPreview(
+                                    name:
+                                        'IsselPill + IsselCircularProgressIndicator',
+                                    child: Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
+                                      children: [
+                                        IsselPill(
+                                            text: _active
+                                                ? 'Activo'
+                                                : 'Inactivo'),
+                                        IsselPill(
+                                            text: _status ?? 'Sin estado'),
+                                        IsselPill(text: 'Plan $_plan'),
+                                        IsselPill(
+                                          widget:
+                                              IsselCircularProgressIndicator(),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   const SizedBox(height: 16),
-                                  SizedBox(
-                                    height: 130,
-                                    child: IsselCarousel(
+                                  _WidgetPreview(
+                                    name: 'IsselCarousel',
+                                    child: SizedBox(
                                       height: 130,
-                                      itemCount: 4,
-                                      viewportFraction: 0.32,
-                                      selectedScale: 1,
-                                      unselectedScale: 0.82,
-                                      onChanged: (index) {
-                                        setState(() => _carouselIndex = index);
-                                      },
-                                      itemBuilder:
-                                          (context, index, isSelected) {
-                                        return DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: isSelected
-                                                ? colorScheme.primary
-                                                : colorScheme.surface,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                              color: colorScheme.outlineVariant,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              'Item ${index + 1}',
-                                              style: TextStyle(
-                                                color: isSelected
-                                                    ? colorScheme.onPrimary
-                                                    : colorScheme.onSurface,
-                                                fontWeight: FontWeight.w700,
+                                      child: IsselCarousel(
+                                        height: 130,
+                                        itemCount: 4,
+                                        viewportFraction: 0.32,
+                                        selectedScale: 1,
+                                        unselectedScale: 0.82,
+                                        onChanged: (index) {
+                                          setState(
+                                            () => _carouselIndex = index,
+                                          );
+                                        },
+                                        itemBuilder:
+                                            (context, index, isSelected) {
+                                          return DecoratedBox(
+                                            decoration: BoxDecoration(
+                                              color: isSelected
+                                                  ? colorScheme.primary
+                                                  : colorScheme.surface,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color:
+                                                    colorScheme.outlineVariant,
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      },
+                                            child: Center(
+                                              child: Text(
+                                                'Item ${index + 1}',
+                                                style: TextStyle(
+                                                  color: isSelected
+                                                      ? colorScheme.onPrimary
+                                                      : colorScheme.onSurface,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -348,48 +435,61 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
                   const SizedBox(height: 20),
                   _Section(
                     title: 'Tabla',
-                    child: SizedBox(
-                      height: 260,
-                      child: IsselTableWidget(
-                        header: const IsselHeaderTable(
-                          titleHeaders: ['Nombre', 'Estado', 'Plan'],
+                    child: _WidgetPreview(
+                      name: 'IsselTableWidget',
+                      child: SizedBox(
+                        height: 260,
+                        child: IsselTableWidget(
+                          header: const IsselHeaderTable(
+                            titleHeaders: ['Nombre', 'Estado', 'Plan'],
+                          ),
+                          rows: [
+                            IsselRowTable(
+                              cells: [
+                                IsselPill(text: _nameController.text),
+                                IsselPill(text: _status ?? 'Sin estado'),
+                                IsselPill(text: _plan),
+                              ],
+                            ),
+                            IsselRowTable(
+                              cells: [
+                                IsselPill(
+                                  text: 'Demo ${_carouselIndex + 1}',
+                                ),
+                                IsselPill(
+                                  text: _active ? 'Activo' : 'Inactivo',
+                                ),
+                                IsselPill(text: 'Cantidad $_quantity'),
+                              ],
+                            ),
+                          ],
+                          onTapRow: (index) {
+                            setState(() {
+                              _lastAction = 'Fila $index presionada';
+                            });
+                          },
                         ),
-                        rows: [
-                          IsselRowTable(
-                            cells: [
-                              IsselPill(text: _nameController.text),
-                              IsselPill(text: _status ?? 'Sin estado'),
-                              IsselPill(text: _plan),
-                            ],
-                          ),
-                          IsselRowTable(
-                            cells: [
-                              IsselPill(text: 'Demo ${_carouselIndex + 1}'),
-                              IsselPill(text: _active ? 'Activo' : 'Inactivo'),
-                              IsselPill(text: 'Cantidad $_quantity'),
-                            ],
-                          ),
-                        ],
-                        onTapRow: (index) {
-                          setState(() {
-                            _lastAction = 'Fila $index presionada';
-                          });
-                        },
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  IsselInfoField2(
-                    icon: Icons.bolt_outlined,
-                    label: _lastAction,
+                  _WidgetPreview(
+                    name: 'IsselInfoField2',
+                    child: IsselInfoField2(
+                      icon: Icons.bolt_outlined,
+                      label: _lastAction,
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  const Row(
-                    children: [
-                      IsselShimmer(width: 140, height: 40),
-                      SizedBox(width: 12),
-                      IsselShimmer(width: 220, height: 40),
-                    ],
+                  const _WidgetPreview(
+                    name: 'IsselShimmer',
+                    child: Row(
+                      children: [
+                        IsselShimmer(width: 140, height: 40),
+                        SizedBox(width: 12),
+                        IsselShimmer(width: 220, height: 40),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -397,6 +497,35 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _WidgetPreview extends StatelessWidget {
+  const _WidgetPreview({
+    required this.name,
+    required this.child,
+  });
+
+  final String name;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          name,
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w700,
+              ),
+        ),
+        const SizedBox(height: 6),
+        child,
+      ],
     );
   }
 }

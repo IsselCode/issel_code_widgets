@@ -30,7 +30,7 @@ El paquete toma decisiones visuales por defecto para que los componentes funcion
 - Campos de formulario con validación, dropdowns y búsqueda.
 - Componentes informativos para mostrar valores, iconos y acciones de copiado.
 - Tarjetas de acción y opciones seleccionables.
-- Carrusel horizontal con selección animada.
+- Carrusel horizontal con selección animada y barra de filtros.
 - Tabla compuesta por encabezado y filas reutilizables.
 - Indicadores visuales como shimmer y progreso circular.
 
@@ -168,6 +168,57 @@ IsselToggleField(
 )
 ```
 
+Para permitir varias líneas, configura `minLines`, `maxLines` y una altura
+mayor:
+
+```dart
+IsselTextFormField(
+  controller: descriptionController,
+  hintText: 'Descripción',
+  prefixIcon: Icons.description_outlined,
+  minLines: 3,
+  maxLines: 5,
+  height: 120,
+)
+```
+
+### Selector de imágenes
+
+```dart
+IsselImagePicker(
+  bytes: selectedImageBytes,
+  onChanged: (bytes) {
+    selectedImageBytes = bytes;
+  },
+  height: 210,
+  width: double.infinity,
+  fit: BoxFit.contain,
+  showClearButton: true,
+  placeholderText: 'Seleccionar imagen',
+)
+```
+
+El widget abre `FilePicker` automáticamente. Puedes usar `validator` dentro de
+un `Form`, ajustar `width`, `height` y cualquier valor de `BoxFit`, y usar
+`pickImage` si necesitas reemplazar el selector predeterminado. `showClearButton`
+es `true` por defecto.
+
+### Barra de filtros
+
+```dart
+IsselFilterBar<String>(
+  value: selectedValue,
+  options: const [
+    IsselFilterOption(value: 'all', label: 'Todos'),
+    IsselFilterOption(value: 'active', label: 'Activos'),
+    IsselFilterOption(value: 'archived', label: 'Archivados'),
+  ],
+  onChanged: (value) {
+    selectedValue = value;
+  },
+)
+```
+
 ### Stepper Numérico
 
 ```dart
@@ -212,6 +263,7 @@ IsselTableWidget(
 - `IsselButton`: botón principal estilizado.
 - `IsselPill`: contenedor tipo píldora para texto o contenido personalizado.
 - `IsselHeaderActionTile`: encabezado con título, subtítulo y botón de acción.
+- `IsselFilterBar`: barra horizontal de filtros basada en pills.
 
 ### Formularios
 
@@ -230,11 +282,13 @@ IsselTableWidget(
 - `IsselToggleField`: campo con etiqueta e interruptor.
 - `IsselTabSwitcher`: selector de dos estados con indicador animado.
 - `TabSwitcherAlignStates`: enum con los estados `left` y `right`.
+- `IsselFilterOption`: valor y etiqueta de una opción de `IsselFilterBar`.
 
 ### Información y Estado
 
 - `IsselInfoField`: campo informativo con título y valor destacado.
 - `IsselInfoField2`: campo informativo con icono, texto y copiado opcional.
+- `IsselImagePicker`: selector visual configurable para mostrar una imagen, carga o estado vacío.
 - `IsselShimmer`: placeholder con efecto shimmer.
 - `IsselCircularProgressIndicator`: indicador circular animado.
 
