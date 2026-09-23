@@ -12,6 +12,9 @@ class IsselImagePicker extends FormField<Uint8List?> {
   /// Bytes de la imagen inicial o actualmente seleccionada.
   final Uint8List? bytes;
 
+  /// Imagen inicial obtenida desde una fuente externa, como una URL.
+  final ImageProvider<Object>? imageProvider;
+
   /// Indica si la aplicación está ocupada con una operación externa.
   final bool loading;
 
@@ -70,6 +73,7 @@ class IsselImagePicker extends FormField<Uint8List?> {
   IsselImagePicker({
     super.key,
     this.bytes,
+    this.imageProvider,
     this.loading = false,
     this.onTap,
     this.onChanged,
@@ -101,6 +105,9 @@ class IsselImagePicker extends FormField<Uint8List?> {
             final isLoading =
                 pickerState._picking || pickerState.widget.loading;
             final imageBytes = pickerState.value;
+            final hasImage = imageBytes != null ||
+                (pickerState.widget.imageProvider != null &&
+                    pickerState._showImageProvider);
             final background =
                 pickerState.widget.backgroundColor ?? colors.surface;
 
@@ -110,7 +117,7 @@ class IsselImagePicker extends FormField<Uint8List?> {
                 child: pickerState.widget.loadingWidget ??
                     const CircularProgressIndicator(),
               );
-            } else if (imageBytes == null) {
+            } else if (!hasImage) {
               content = pickerState.widget.placeholder ??
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -127,7 +134,12 @@ class IsselImagePicker extends FormField<Uint8List?> {
               content = Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.memory(imageBytes, fit: pickerState.widget.fit),
+                  imageBytes != null
+                      ? Image.memory(imageBytes, fit: pickerState.widget.fit)
+                      : Image(
+                          image: pickerState.widget.imageProvider!,
+                          fit: pickerState.widget.fit,
+                        ),
                   if (pickerState.widget.showClearButton)
                     Positioned(
                       right: 12,
@@ -206,6 +218,13 @@ class IsselImagePicker extends FormField<Uint8List?> {
 
 class _IsselImagePickerState extends FormFieldState<Uint8List?> {
   bool _picking = false;
+  var _showImageProvider = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _showImageProvider = widget.bytes == null && widget.imageProvider != null;
+  }
 
   @override
   IsselImagePicker get widget => super.widget as IsselImagePicker;
@@ -215,6 +234,10 @@ class _IsselImagePickerState extends FormFieldState<Uint8List?> {
     super.didUpdateWidget(oldWidget);
     if (!identical(oldWidget.bytes, widget.bytes)) {
       setValue(widget.bytes);
+    }
+    if (oldWidget.imageProvider != widget.imageProvider ||
+        (widget.bytes == null && oldWidget.bytes != widget.bytes)) {
+      _showImageProvider = widget.bytes == null && widget.imageProvider != null;
     }
   }
 
@@ -228,6 +251,7 @@ class _IsselImagePickerState extends FormFieldState<Uint8List?> {
           ? await widget.pickImage!()
           : await _pickImageWithFilePicker();
       if (!mounted || selectedBytes == null) return;
+      _showImageProvider = false;
       didChange(selectedBytes);
       widget.onChanged?.call(selectedBytes);
     } catch (error) {
@@ -239,6 +263,7 @@ class _IsselImagePickerState extends FormFieldState<Uint8List?> {
 
   void _clearImage() {
     if (_picking || widget.loading) return;
+    _showImageProvider = false;
     didChange(null);
     widget.onChanged?.call(null);
   }
