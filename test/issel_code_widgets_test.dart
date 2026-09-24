@@ -74,6 +74,51 @@ void main() {
     expect(find.text('Selecciona una opción'), findsOneWidget);
   });
 
+  testWidgets(
+    'IsselSearchDropdown refreshes overlay items after search updates',
+    (tester) async {
+      var query = '';
+      var items = <String>['Alpha', 'Beta', 'Gamma'];
+
+      await tester.pumpWidget(
+        StatefulBuilder(
+          builder: (context, setState) => MaterialApp(
+            home: Scaffold(
+              body: IsselSearchDropdown<String>(
+                overlay: true,
+                hintText: 'Proyecto',
+                items: [
+                  for (final item in items)
+                    DropdownMenuItem(value: item, child: Text(item)),
+                ],
+                onChanged: (_) {},
+                onSearchChanged: (value) => setState(() {
+                  query = value;
+                  items = items
+                      .where(
+                        (item) =>
+                            item.toLowerCase().contains(value.toLowerCase()),
+                      )
+                      .toList();
+                }),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Proyecto'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).last, 'al');
+      await tester.pumpAndSettle();
+
+      expect(query, 'al');
+      expect(find.text('Alpha'), findsOneWidget);
+      expect(find.text('Beta'), findsNothing);
+      expect(find.text('Gamma'), findsNothing);
+    },
+  );
+
   testWidgets('IsselImagePicker invokes its callback', (tester) async {
     var tapped = false;
     final formKey = GlobalKey<FormState>();

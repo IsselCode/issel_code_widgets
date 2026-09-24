@@ -1,3 +1,8 @@
+## 0.0.46
+
+* Deferred overlay refreshes in `IsselSearchDropdown` until after the current
+  frame to avoid state errors when search results update while it is open.
+
 ## 0.0.45
 
 * Added configurable overlay rendering to `IsselSearchDropdown`.

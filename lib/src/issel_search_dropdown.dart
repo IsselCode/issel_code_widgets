@@ -67,6 +67,12 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
   OverlayEntry? _overlayEntry;
   T? hoverValue;
 
+  void _scheduleOverlayRefresh() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _overlayEntry?.markNeedsBuild();
+    });
+  }
+
   void _toggleOpen() {
     if (_isOpen) {
       _closeDropdown();
@@ -153,7 +159,7 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
         _removeOverlay();
       }
     }
-    _overlayEntry?.markNeedsBuild();
+    _scheduleOverlayRefresh();
   }
 
   @override
@@ -193,12 +199,14 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
         child: Row(
           children: [
             Expanded(
-              child: selectedChild ??
+              child:
+                  selectedChild ??
                   Text(
                     widget.hintText,
                     overflow: TextOverflow.ellipsis,
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: colorScheme.outline),
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.outline,
+                    ),
                   ),
             ),
             Icon(
@@ -270,7 +278,7 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
                   onHover: (value) {
                     hoverValue = value ? item.value : null;
                     if (mounted) setState(() {});
-                    _overlayEntry?.markNeedsBuild();
+                    _scheduleOverlayRefresh();
                   },
                   mouseCursor: SystemMouseCursors.click,
                   child: ClipRRect(
@@ -283,15 +291,16 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
                       color: widget.value == item.value
                           ? colorScheme.inverseSurface.withAlpha(25)
                           : hoverValue == item.value
-                              ? colorScheme.inverseSurface.withAlpha(15)
-                              : Colors.transparent,
+                          ? colorScheme.inverseSurface.withAlpha(15)
+                          : Colors.transparent,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8,
                           horizontal: 8,
                         ),
                         child: DefaultTextStyle(
-                          style: textTheme.bodyMedium ??
+                          style:
+                              textTheme.bodyMedium ??
                               const TextStyle(fontSize: 14),
                           child: item.child,
                         ),
