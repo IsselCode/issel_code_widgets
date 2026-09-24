@@ -33,6 +33,47 @@ void main() {
     expect(selected, 'active');
   });
 
+  testWidgets('IsselSearchDropdown can render its menu as an overlay', (
+    tester,
+  ) async {
+    String? selected;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 240,
+            child: IsselSearchDropdown<String>(
+              value: selected,
+              hintText: 'Selecciona una opción',
+              overlay: true,
+              items: const [
+                DropdownMenuItem(value: 'one', child: Text('Opción uno')),
+                DropdownMenuItem(value: 'two', child: Text('Opción dos')),
+              ],
+              onChanged: (value) => selected = value,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final dropdown = find.byType(IsselSearchDropdown<String>);
+    final initialSize = tester.getSize(dropdown);
+
+    await tester.tap(find.text('Selecciona una opción'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Opción uno'), findsOneWidget);
+    expect(tester.getSize(dropdown), initialSize);
+
+    await tester.tap(find.text('Opción dos'));
+    await tester.pumpAndSettle();
+
+    expect(selected, 'two');
+    expect(find.text('Selecciona una opción'), findsOneWidget);
+  });
+
   testWidgets('IsselImagePicker invokes its callback', (tester) async {
     var tapped = false;
     final formKey = GlobalKey<FormState>();

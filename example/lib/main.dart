@@ -200,6 +200,7 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
                                       child: IsselSearchDropdown<String>(
                                         value: _country,
                                         hintText: 'Pais',
+                                        overlay: false,
                                         maxItemsToShow: 4,
                                         items: const [
                                           DropdownMenuItem(
@@ -225,6 +226,43 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
                                         onSearchChanged: (value) {
                                           setState(() {
                                             _lastAction = 'Busqueda: $value';
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _WidgetPreview(
+                                      name: 'IsselSearchDropdown overlay',
+                                      child: IsselSearchDropdown<String>(
+                                        value: _country,
+                                        hintText: 'Pais con overlay',
+                                        overlay: true,
+                                        maxItemsToShow: 4,
+                                        items: const [
+                                          DropdownMenuItem(
+                                            value: 'mx',
+                                            child: Text('Mexico'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: 'co',
+                                            child: Text('Colombia'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: 'pe',
+                                            child: Text('Peru'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: 'cl',
+                                            child: Text('Chile'),
+                                          ),
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() => _country = value);
+                                        },
+                                        onSearchChanged: (value) {
+                                          setState(() {
+                                            _lastAction =
+                                                'Busqueda overlay: $value';
                                           });
                                         },
                                       ),

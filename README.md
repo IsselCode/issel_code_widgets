@@ -123,6 +123,7 @@ IsselDropdown<String>(
 IsselSearchDropdown<String>(
   value: selectedValue,
   hintText: 'Buscar opción',
+  overlay: true,
   maxItemsToShow: 5,
   items: const [
     DropdownMenuItem(value: 'mx', child: Text('México')),
