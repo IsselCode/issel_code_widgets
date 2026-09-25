@@ -39,15 +39,18 @@ class _IsselShimmerState extends State<IsselShimmer> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return show
         ? Shimmer.fromColors(
-            baseColor: const Color(0xffcfcfcf).withAlpha(150),
-            highlightColor: const Color(0xffcfcfcf).withAlpha(50),
+            baseColor: colors.outline.withAlpha(150),
+            highlightColor: colors.outline.withAlpha(50),
             child: Container(
               width: widget.width,
               height: widget.height,
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                  color: colors.surface,
+                  borderRadius: BorderRadius.circular(10)),
             ))
         : SizedBox.shrink();
   }

@@ -67,7 +67,7 @@ class _IsselFloatTextFieldState extends State<IsselFloatTextField> {
     final result = await Navigator.of(context).push<_FloatResult>(
       PageRouteBuilder<_FloatResult>(
         opaque: false,
-        barrierColor: Colors.black26,
+        barrierColor: Theme.of(context).colorScheme.scrim.withAlpha(66),
         transitionDuration: const Duration(milliseconds: 250),
         reverseTransitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (context, anim, _) {

@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 /// Opción seleccionable horizontal con texto.
@@ -59,7 +58,11 @@ class IsselRadioTile<T> extends StatelessWidget {
         child: Text(
           label,
           maxLines: 1,
-          style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
+          style: textTheme.bodyMedium?.copyWith(
+            color: value == groupValue
+                ? colorScheme.onPrimary
+                : colorScheme.onSurface,
+          ),
         ),
       ),
     );

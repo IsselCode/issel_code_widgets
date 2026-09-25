@@ -29,9 +29,7 @@ class IsselToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme = theme.textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final double switchHeight = height * 0.65;
     final double thumbMargin = 4;
@@ -45,7 +43,7 @@ class IsselToggle extends StatelessWidget {
         width: width,
         padding: EdgeInsets.all(thumbMargin),
         decoration: BoxDecoration(
-            color: backColor ?? theme.scaffoldBackgroundColor,
+            color: backColor ?? colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(height * 0.5)),
         child: AnimatedAlign(
           alignment: value ? Alignment.centerRight : Alignment.centerLeft,

@@ -36,7 +36,7 @@ class IsselHeaderTable extends StatelessWidget {
                       titleHeaders[index],
                       maxLines: 1,
                     ),
-                    color: colorPills ?? colorScheme.surface,
+                    color: colorPills ?? colorScheme.surfaceContainer,
                   ),
                 ),
               ],

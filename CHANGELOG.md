@@ -6,6 +6,7 @@
 ## 0.0.45
 
 * Added configurable overlay rendering to `IsselSearchDropdown`.
+* Added configurable Issel colors, text metrics, default themes, and theme controller.
 
 ## 0.0.43
 
@@ -13,6 +14,7 @@
 * Added multiline configuration to `IsselTextFormField`.
 * Added configurable `IsselImagePicker`.
 * Added configurable image clearing with `showClearButton`.
+* Updated `shimmer` to 4.0.0 and `flutter_lints` to 6.0.0.
 
 ## 0.0.1
 

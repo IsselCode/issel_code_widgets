@@ -68,6 +68,43 @@ flutter pub get
 import 'package:issel_code_widgets/issel_code_widgets.dart';
 ```
 
+## Tema predeterminado y configuracion
+
+Los widgets leen `Theme.of(context).colorScheme` y `Theme.of(context).textTheme`,
+por lo que tambien pueden usarse con el tema propio de cada aplicacion. Cuando
+el proyecto no tiene un sistema visual definido, el paquete ofrece un tema
+Issel configurable con los valores probados para sus componentes:
+
+```dart
+final themeController = IsselThemeController(
+  lightColors: const IsselThemeColors.light(
+    primary: Color(0xff7B1FA2),
+    secondary: Color(0xff4A148C),
+  ),
+  text: const IsselTextThemeConfig(
+    bodyMediumHeight: 1.15,
+    labelMediumHeight: 1.1,
+  ),
+);
+
+AnimatedBuilder(
+  animation: themeController,
+  builder: (_, __) => MaterialApp(
+    theme: themeController.lightTheme,
+    darkTheme: themeController.darkTheme,
+    themeMode: themeController.themeMode,
+    home: const HomePage(),
+  ),
+);
+```
+
+`IsselThemeColors.light()` y `IsselThemeColors.dark()` contienen los colores
+base, incluyendo `scaffoldBackground`, `surface`, `surfaceContainer`,
+`primary` y `outline`. Las alturas tipograficas empiezan en `1.0`; solo se
+incrementan cuando el proyecto las configura mediante `IsselTextThemeConfig`.
+El controlador es opcional: un `ThemeData` propio que exponga el mismo
+`ColorScheme` funciona directamente con todos los widgets.
+
 ## Uso Básico
 
 ### Botón

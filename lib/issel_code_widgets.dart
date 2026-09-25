@@ -24,6 +24,7 @@ export 'package:issel_code_widgets/src/issel_text_form_field.dart';
 export 'package:issel_code_widgets/src/issel_toggle.dart';
 export 'package:issel_code_widgets/src/issel_toggle_field.dart';
 export 'package:issel_code_widgets/src/tab_switcher.dart';
+export 'package:issel_code_widgets/src/theme/issel_theme.dart';
 
 // CUSTOMS PAINTS
 export 'package:issel_code_widgets/custom_paints/gradient_border_painter.dart';

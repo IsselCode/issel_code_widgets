@@ -65,6 +65,8 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
   final _layerLink = LayerLink();
   final _searchFocusNode = FocusNode();
   OverlayEntry? _overlayEntry;
+  T? _selectedValue;
+  Widget? _selectedChild;
   T? hoverValue;
 
   void _scheduleOverlayRefresh() {
@@ -143,8 +145,19 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
   }
 
   void _selectItem(T? value) {
+    final selectedItem = _findItem(value);
+    _selectedValue = value;
+    _selectedChild = selectedItem?.child;
     _closeDropdown();
     widget.onChanged?.call(value);
+  }
+
+  DropdownMenuItem<T>? _findItem(T? value) {
+    if (value == null) return null;
+    for (final item in widget.items ?? <DropdownMenuItem<T>>[]) {
+      if (item.value == value) return item;
+    }
+    return null;
   }
 
   @override
@@ -174,14 +187,10 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
-    Widget? selectedChild;
-    if (widget.value != null && widget.items != null) {
-      try {
-        selectedChild = widget.items!
-            .firstWhere((item) => item.value == widget.value)
-            .child;
-      } catch (_) {}
-    }
+    final selectedChild = _findItem(widget.value)?.child ??
+        (widget.value != null && _selectedValue == widget.value
+            ? _selectedChild
+            : null);
 
     return Container(
       key: _headerKey,
@@ -242,7 +251,7 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
           BoxShadow(
             blurRadius: 6,
             offset: const Offset(0, 3),
-            color: const Color.fromRGBO(0, 0, 0, 0.15),
+            color: colorScheme.onSurface.withAlpha(38),
           ),
         ],
       ),
@@ -253,6 +262,7 @@ class _CustomSearchDropdownState<T> extends State<IsselSearchDropdown<T>> {
             hintText: 'Buscar',
             autofocus: true,
             focusNode: _searchFocusNode,
+            fillColor: colorScheme.surfaceContainer,
             height: 40,
             prefixIcon: Icons.search,
             onChanged: widget.onSearchChanged,

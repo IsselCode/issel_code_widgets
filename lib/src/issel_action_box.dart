@@ -81,7 +81,7 @@ class IsselActionBox extends StatelessWidget {
                     onPressed: onDeleteTap,
                     icon: Icon(
                       Icons.delete,
-                      color: Colors.red,
+                      color: colorScheme.error,
                     )),
               ),
             Column(

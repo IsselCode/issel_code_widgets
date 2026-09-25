@@ -88,10 +88,10 @@ class IsselFilterBar<T> extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 18),
             text: option.label,
             color: selected
-                ? selectedColor ?? colors.onSurface
+                ? selectedColor ?? colors.primary
                 : unselectedColor ?? colors.surface,
             textColor: selected
-                ? selectedTextColor ?? colors.surface
+                ? selectedTextColor ?? colors.onPrimary
                 : unselectedTextColor ?? colors.onSurface,
             onTap: () => onChanged(option.value),
           );

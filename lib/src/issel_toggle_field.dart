@@ -38,9 +38,7 @@ class IsselToggleField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme = theme.textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       height: height,
@@ -60,7 +58,7 @@ class IsselToggleField extends StatelessWidget {
             value: value,
             height: height,
             width: width,
-            backColor: valueBackColor ?? theme.scaffoldBackgroundColor,
+            backColor: valueBackColor ?? colorScheme.surfaceContainer,
           )
         ],
       ),

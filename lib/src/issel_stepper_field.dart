@@ -144,7 +144,7 @@ class _TestStepperFieldState extends State<IsselStepperField> {
           Expanded(
               child: Container(
             decoration: BoxDecoration(
-                color: widget.counterColor ?? theme.scaffoldBackgroundColor,
+                color: widget.counterColor ?? colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(10)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

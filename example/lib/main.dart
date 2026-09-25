@@ -161,7 +161,8 @@ class _WidgetsGalleryPageState extends State<WidgetsGalleryPage> {
                                         minLines: 3,
                                         maxLines: 4,
                                         height: 120,
-                                        textInputAction: TextInputAction.newline,
+                                        textInputAction:
+                                            TextInputAction.newline,
                                         onChanged: (value) {
                                           setState(() {
                                             _lastAction = 'Notas: $value';
