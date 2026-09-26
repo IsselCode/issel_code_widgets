@@ -36,6 +36,44 @@ void main() {
     controller.dispose();
   });
 
+  testWidgets('IsselThemeSelector adapts its cards to mobile content', (
+    tester,
+  ) async {
+    final controller = IsselThemeController(themeMode: ThemeMode.system);
+    ThemeMode? changedMode;
+
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      controller.dispose();
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: IsselThemeSelector(
+            controller: controller,
+            onChanged: (mode) => changedMode = mode,
+          ),
+        ),
+      ),
+    );
+
+    final systemCard = find.ancestor(
+      of: find.text('Sistema'),
+      matching: find.byType(AnimatedContainer),
+    );
+    expect(tester.getSize(systemCard.first).height, lessThan(250));
+
+    await tester.tap(find.text('Claro'));
+    await tester.pumpAndSettle();
+
+    expect(controller.themeMode, ThemeMode.light);
+    expect(changedMode, ThemeMode.light);
+  });
+
   test('IsselTextThemeConfig starts every text height at 1.0', () {
     const config = IsselTextThemeConfig();
     final textTheme = config.build(outline: Colors.grey);

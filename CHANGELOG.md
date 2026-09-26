@@ -1,3 +1,8 @@
+## 0.0.47
+
+* Added `IsselThemeSelector` for responsive light, dark, and system theme
+  selection with configurable labels, descriptions, and persistence callback.
+
 ## 0.0.46
 
 * Deferred overlay refreshes in `IsselSearchDropdown` until after the current

@@ -344,6 +344,24 @@ IsselTableWidget(
 - `IsselAssetContainer` puede cargar favicons desde red usando el dominio proporcionado en `network`.
 - `IsselDropdown2` e `IsselTextFormField` pueden usarse dentro de un `Form` con validadores.
 
+## Selector de tema
+
+Para mostrar un selector responsive que reutilice las paletas del controlador,
+usa `IsselThemeSelector`. El widget cambia el modo y permite persistirlo desde
+`onChanged`:
+
+```dart
+IsselThemeSelector(
+  controller: themeController,
+  onChanged: (mode) async {
+    await preferences.setString('theme_mode', mode.name);
+  },
+)
+```
+
+En anchos reducidos las tarjetas se apilan y conservan su altura natural. En
+anchos amplios se muestran en una fila con la misma altura.
+
 ## Desarrollo
 
 Para formatear el paquete:
