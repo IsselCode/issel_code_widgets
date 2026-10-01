@@ -1,3 +1,24 @@
+## 0.0.49
+
+* Added `IsselAppConfig` and `IsselAppController` to centralize app defaults,
+  keeping an owned `IsselThemeController` and stable navigation instance.
+* Added `IsselController` with disposal awareness for asynchronous presentation.
+* Added configurable desktop scaffold, caption, compact caption buttons,
+  breadcrumbs, and a controlled navigation pane inspired by PPG Trazabilidad.
+* Added font family configuration and updated the example with an Issel feature,
+  light/dark/system themes, and responsive desktop/mobile navigation.
+* Fixed the header action subtitle and bounded long labels; made the example
+  shimmer placeholders wrap on narrow screens.
+
+## 0.0.48
+
+* Added `IsselNavigationService` with typed route results, replacement, stack
+  reset, route settings, and back requests that respect `PopScope`.
+* Added the Dart-only `issel_core.dart` entrypoint with `AppException`,
+  `AppFailure`, and sealed `AppResult<T>` success/error types.
+* Kept core types out of the widget export to avoid conflicts with existing
+  application exceptions and to support use from domain and data layers.
+
 ## 0.0.47
 
 * Added `IsselThemeSelector` for responsive light, dark, and system theme

@@ -3,7 +3,7 @@
 Paquete Flutter con widgets reutilizables de IsselCode para construir interfaces con estilos consistentes, componentes de formulario, selectores, tarjetas, tablas y estados de carga.
 
 <p align="center">
-  <img src="docs/images/widgets.png" alt="Vista previa de widgets de issel_code_widgets" width="800">
+  <img src="docs/images/desktop-light.png" alt="Galería con tema Issel y menú lateral" width="900">
 </p>
 
 `issel_code_widgets` está pensado como un kit práctico para freelancers, estudiantes y desarrolladores que quieren crear aplicaciones Flutter simples, bonitas y funcionales sin diseñar cada componente desde cero.
@@ -33,6 +33,8 @@ El paquete toma decisiones visuales por defecto para que los componentes funcion
 - Carrusel horizontal con selección animada y barra de filtros.
 - Tabla compuesta por encabezado y filas reutilizables.
 - Indicadores visuales como shimmer y progreso circular.
+- Servicio de navegación inyectable y tipos Dart para errores y resultados.
+- Configuración central del kit y componentes de escritorio con menú lateral.
 
 ## Instalación
 
@@ -53,7 +55,7 @@ También puedes agregarlo desde un repositorio Git:
 dependencies:
   issel_code_widgets:
     git:
-      url: https://github.com/usuario/issel_code_widgets.git
+      url: https://github.com/IsselCode/issel_code_widgets.git
 ```
 
 Después ejecuta:
@@ -68,7 +70,45 @@ flutter pub get
 import 'package:issel_code_widgets/issel_code_widgets.dart';
 ```
 
-## Tema predeterminado y configuracion
+## Configuración de la aplicación
+
+Para proyectos nuevos con la skill Issel, concentra los valores personalizables
+en una feature de la app: `lib/src/issel/presentation/controllers/app_issel_controller.dart`.
+El paquete aporta `IsselAppController` y los defaults; la skill crea esa integración.
+
+```dart
+class AppIsselController extends IsselAppController {
+  AppIsselController()
+      : super(config: const IsselAppConfig(
+          title: 'Mi aplicación',
+          lightTheme: IsselThemeConfig(
+            colors: IsselThemeColors.light(primary: Color(0xff7B1FA2)),
+          ),
+          darkTheme: IsselThemeConfig(colors: IsselThemeColors.dark()),
+          desktop: IsselDesktopConfig(sidebarWidth: 190, captionHeight: 32),
+        ));
+}
+```
+
+Crea una sola instancia en la raíz o en la composición de dependencias. Observa
+el controlador para reconstruir `MaterialApp` con `theme: issel.theme.lightTheme`,
+`darkTheme: issel.theme.darkTheme`, `themeMode: issel.theme.themeMode` y
+`navigatorKey: issel.navigation.navigatorKey`. `issel.theme` es un
+`IsselThemeController` estable y propiedad del controlador de app; `dispose`
+lo libera. No lo liberes además desde otro Provider.
+
+`updateConfig` conserva la identidad del tema y la clave de navegación. Los
+cambios de tema también actualizan `issel.config`. La persistencia de preferencias
+se integra desde la app. `issel_app.dart` permite importar sólo esta composición.
+El [ejemplo](example/lib/main.dart) incluye la feature y navegación adaptable.
+
+La configuración de apariencia también se adapta a móvil:
+
+<p align="center">
+  <img src="docs/images/mobile-dark.png" alt="Selector de tema Issel en una pantalla móvil" width="280">
+</p>
+
+## Tema predeterminado y configuración
 
 Los widgets leen `Theme.of(context).colorScheme` y `Theme.of(context).textTheme`,
 por lo que tambien pueden usarse con el tema propio de cada aplicacion. Cuando
@@ -102,8 +142,166 @@ AnimatedBuilder(
 base, incluyendo `scaffoldBackground`, `surface`, `surfaceContainer`,
 `primary` y `outline`. Las alturas tipograficas empiezan en `1.0`; solo se
 incrementan cuando el proyecto las configura mediante `IsselTextThemeConfig`.
-El controlador es opcional: un `ThemeData` propio que exponga el mismo
-`ColorScheme` funciona directamente con todos los widgets.
+Las apps nuevas con la skill usan este controlador mediante `IsselAppController`.
+Los widgets mantienen compatibilidad con un `ThemeData` propio que exponga
+los roles semánticos del tema. `IsselTextThemeConfig.fontFamily` permite usar
+una fuente proporcionada o registrada por la aplicación.
+
+## Escritorio
+
+Los componentes de `issel_desktop.dart` también se exportan desde el barrel
+principal. Su composición sigue el patrón de PPG Trazabilidad:
+
+```dart
+IsselDesktopScaffold(
+  config: issel.config.desktop,
+  sidebarOpen: sidebarOpen,
+  onSidebarClose: closeSidebar,
+  caption: IsselDesktopCaption(
+    title: IsselBreadcrumbs(items: breadcrumbs),
+    leading: menuButton,
+    actions: captionActions,
+  ),
+  sidebar: IsselNavigationPane(
+    items: destinations,
+    selectedId: currentSectionId,
+    onSelected: openSection,
+  ),
+  child: currentView,
+);
+```
+
+La app proporciona los destinos y callbacks. El menú usa selección controlada,
+lista desplazable y header/footer opcionales. Las acciones de caption usan
+`IsselCaptionButton` con tooltip y comportamiento de foco, teclado y hover.
+El scaffold reserva la altura de la barra; no sumes esa altura al padding de
+cada vista. `edgeToEdge` superpone la barra cuando un flujo lo necesita. En
+ventanas estrechas el menú se superpone al contenido.
+
+Integra los plugins de ventana desde un adaptador de plataforma en la app:
+`dragAreaBuilder` envuelve el área de título y `windowControls` recibe minimizar,
+maximizar/restaurar y cerrar. Esto permite usar window_manager y Snap Layouts
+en Windows conservando la compilación para otras plataformas. La composición
+del ejemplo no invoca controles nativos; el adaptador debe conectar acciones
+reales y observar cambios de estado de ventana.
+
+## Controladores y operaciones asíncronas
+
+`IsselController` es una base de presentación que expone `isDisposed` y
+`notifyIfActive()`. Comprueba su ciclo de vida después de esperar operaciones,
+incluidos `catch` y `finally`, antes de modificar estado o notificar. La base
+no cancela operaciones de red. Al liberar streams/timers llama también a
+`super.dispose()`.
+
+Las acciones devuelven `AppResult<T>` y actualizan el estado observable; la
+vista espera el resultado y, después de comprobar `mounted`, decide toast,
+navegación o cierre de diálogo. Deshabilita guardar durante `isSaving` y evita
+enviar dos operaciones simultáneas. Un resultado que llega tras cerrar la vista
+puede completarse sin notificar un controlador liberado.
+
+## Navegación reutilizable
+
+`IsselNavigationService` se exporta desde `issel_code_widgets.dart` y también
+desde `issel_navigation.dart`. Crea una instancia en la composición de la app
+y conecta su clave al `MaterialApp`; conserva esa instancia al reconstruirlo:
+
+```dart
+final navigation = IsselNavigationService();
+
+MaterialApp(
+  navigatorKey: navigation.navigatorKey,
+  home: const HomePage(),
+);
+
+// Desde una acción de presentación, una vez montado el Navigator:
+final saved = await navigation.navigateTo<bool>(
+  const EditPage(),
+  settings: const RouteSettings(name: '/edit', arguments: {'id': 42}),
+);
+
+// Desde EditPage, después de guardar:
+await navigation.goBack(true);
+```
+
+Inyecta la instancia mediante el mecanismo de la app, por ejemplo constructor,
+Provider o GetIt. El paquete no agrega dependencias de inyección ni registra
+un singleton global. `isReady` indica si la clave está conectada; una acción
+de navegación antes de montar el Navigator produce un `StateError` explícito.
+
+| Operación | Comportamiento |
+| --- | --- |
+| `navigateTo<T>(page)` | Abre una página y devuelve su resultado tipado al cerrar. |
+| `pushReplacement<T, TO>(page, result: ...)` | Reemplaza la ruta actual y completa su resultado anterior. |
+| `pushAndRemoveUntil<T>(page, predicate: ...)` | Limpia la pila por defecto; un predicado permite conservar rutas previas. |
+| `popUntilWidget(type)` / `popUntilRoute(name)` | Vuelve a un destino; si no existe, conserva la primera ruta. |
+| `goBack<T>(result)` | Solicita volver respetando `PopScope`, sin retirar la ruta raíz. |
+| `pushRoute<T>(route)` | Usa una ruta o transición definida por la app. |
+
+`RouteSettings` y `fullscreenDialog` son configurables al abrir o reemplazar
+páginas. Sin un nombre explícito se utiliza el tipo de widget. `canGoBack`
+describe la pila; no evalúa bloqueos de `PopScope`. El resultado de `goBack`
+indica si la petición fue atendida: puede ser `true` aunque `PopScope` impida
+salir. Para Navigators anidados, conecta otra instancia a la clave de esa pila.
+
+Este helper cubre navegación imperativa mediante `Navigator`. Si la app necesita
+URLs, deep links o restauración declarativa de rutas, utiliza su router y
+conserva la navegación fuera del dominio. Consulta la
+[guía de navegación de Flutter](https://docs.flutter.dev/ui/navigation).
+
+## Errores y resultados para datos y dominio
+
+Importa esta biblioteca dedicada para usar tipos compartidos sin importar
+Flutter ni los widgets:
+
+```dart
+import 'package:issel_code_widgets/issel_core.dart';
+
+abstract interface class CustomerRepository {
+  Future<AppResult<String>> loadName(int id);
+}
+
+// Ejemplo de repositorio con una integración inyectada por la app:
+class CustomerRepositoryImpl implements CustomerRepository {
+  CustomerRepositoryImpl({required this.fetchName});
+
+  final Future<String> Function(int id) fetchName;
+
+  @override
+  Future<AppResult<String>> loadName(int id) async {
+    try {
+      return AppResult.success(await fetchName(id));
+    } on AppException catch (exception) {
+      return AppResult.error(AppFailure.fromException(exception));
+    }
+  }
+}
+
+Future<String> example() async {
+  final repository = CustomerRepositoryImpl(
+    fetchName: (_) async => throw const AppException(
+      message: 'No fue posible cargar el cliente',
+      code: 'connection',
+    ),
+  );
+  final result = await repository.loadName(42);
+  return result.fold(
+    onSuccess: (name) => name,
+    onError: (failure) => failure.message,
+  );
+}
+```
+
+`AppException` y `AppFailure` admiten `message`, `code`, `cause` y `stackTrace`.
+El mensaje es para presentación; la causa y la traza permiten conservar el
+diagnóstico. `AppResult<T>` contiene `AppSuccess<T>` con un valor, o
+`AppError<T>` con un fallo; admite `fold` y `switch` exhaustivo, sin `dartz`.
+Los códigos y políticas de recuperación pertenecen a cada app. Convierte los
+errores esperados en el límite apropiado; deja propagarse errores de programación.
+
+Estos tipos se exportan sólo desde `issel_core.dart` para mantener aislado el
+dominio y evitar ambigüedades con un `AppException` existente cuando se importan
+los widgets. Si migras helpers propios, reemplaza sus imports de forma explícita.
+El paquete sigue siendo Flutter, pero esta biblioteca utiliza únicamente Dart.
 
 ## Uso Básico
 

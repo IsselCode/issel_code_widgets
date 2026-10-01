@@ -54,11 +54,15 @@ class IsselHeaderActionTile extends StatelessWidget {
               children: [
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: textTheme.bodyMedium
                       ?.copyWith(color: colorScheme.primary),
                 ),
                 Text(
-                  title,
+                  subTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style:
                       textTheme.bodySmall?.copyWith(color: colorScheme.outline),
                 )

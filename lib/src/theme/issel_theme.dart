@@ -164,6 +164,7 @@ class IsselThemeColors {
 /// forma individual o usar [fontSizeScale] para ajustar toda la escala.
 class IsselTextThemeConfig {
   const IsselTextThemeConfig({
+    this.fontFamily,
     this.fontSizeScale = 1.0,
     this.displayLargeHeight = 1.0,
     this.displayMediumHeight = 1.0,
@@ -182,6 +183,8 @@ class IsselTextThemeConfig {
     this.labelSmallHeight = 1.0,
   });
 
+  /// Fuente registrada por la app; el paquete no descarga ni incluye fuentes.
+  final String? fontFamily;
   final double fontSizeScale;
   final double displayLargeHeight;
   final double displayMediumHeight;
@@ -284,6 +287,7 @@ class IsselTextThemeConfig {
         height: labelSmallHeight,
       ),
     ).apply(
+      fontFamily: fontFamily,
       bodyColor: onSurface,
       displayColor: onSurface,
       fontSizeFactor: fontSizeScale,
@@ -298,6 +302,7 @@ class IsselTextThemeConfig {
 
   /// Copia esta configuración tipográfica cambiando sólo los valores indicados.
   IsselTextThemeConfig copyWith({
+    String? fontFamily,
     double? fontSizeScale,
     double? displayLargeHeight,
     double? displayMediumHeight,
@@ -316,6 +321,7 @@ class IsselTextThemeConfig {
     double? labelSmallHeight,
   }) {
     return IsselTextThemeConfig(
+      fontFamily: fontFamily ?? this.fontFamily,
       fontSizeScale: fontSizeScale ?? this.fontSizeScale,
       displayLargeHeight: displayLargeHeight ?? this.displayLargeHeight,
       displayMediumHeight: displayMediumHeight ?? this.displayMediumHeight,
