@@ -1,3 +1,9 @@
+## 0.0.50
+
+* Added decimal range and step support to `IsselStepperField`.
+* Preserved integer stepper usage while allowing fractional increments such as
+  `0.1` between decimal minimum and maximum values.
+
 ## 0.0.49
 
 * Added `IsselAppConfig` and `IsselAppController` to centralize app defaults,

@@ -459,15 +459,20 @@ IsselFilterBar<String>(
 
 ```dart
 IsselStepperField(
-  title: 'Cantidad',
-  minValue: 0,
-  maxValue: 10,
+  title: 'Escala',
+  minValue: 0.5,
+  maxValue: 2.0,
+  step: 0.1,
   initValue: 1,
   onChanged: (value) {
-    // Nuevo valor
+    // New value: 1.1, 1.2, ...
   },
 )
 ```
+
+`minValue`, `maxValue` y `step` aceptan valores decimales. El valor
+predeterminado de `step` es `1`, por lo que los usos enteros existentes siguen
+funcionando sin cambios.
 
 ### Tabla
 

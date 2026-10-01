@@ -84,6 +84,41 @@ void main() {
     expect(textTheme.labelSmall?.height, 1.0);
   });
 
+  testWidgets('IsselStepperField supports decimal steps', (tester) async {
+    double value = 1;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: IsselStepperField(
+            title: 'Escala',
+            minValue: 0.5,
+            maxValue: 2,
+            step: 0.1,
+            initValue: value,
+            onChanged: (nextValue) => value = nextValue,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byIcon(Icons.add_outlined));
+    await tester.pump();
+    expect(value, closeTo(1.1, 0.000001));
+    expect(
+      tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+      '1.1',
+    );
+
+    await tester.tap(find.byIcon(Icons.remove_outlined));
+    await tester.pump();
+    expect(value, closeTo(1, 0.000001));
+    expect(
+      tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+      '1',
+    );
+  });
+
   testWidgets('IsselFilterBar changes the selected value', (tester) async {
     String selected = 'all';
 
